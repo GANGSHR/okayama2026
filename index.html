@@ -1,0 +1,1027 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="岡山之旅">
+<meta name="theme-color" content="#f0f4f8">
+<title>岡山之旅 5/13–5/18</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;600;700;900&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #f0f4f8;
+  --surface: #ffffff;
+  --surface2: #f8fafc;
+  --card: #ffffff;
+  --card2: #f4f7fb;
+  --border: #e2e8f0;
+  --border-em: #cbd5e1;
+
+  /* Accent — 靛青 teal */
+  --teal: #0d9488;
+  --teal-dark: #0f766e;
+  --teal-light: #e6faf8;
+  --teal-mid: rgba(13,148,136,.12);
+
+  /* 重點標記 — 琥珀色 */
+  --amber: #d97706;
+  --amber-dark: #b45309;
+  --amber-light: #fffbeb;
+  --amber-mid: rgba(217,119,6,.13);
+  --amber-border: rgba(217,119,6,.35);
+
+  /* 輔助 */
+  --coral: #ef4444;
+  --coral-light: #fff5f5;
+  --indigo: #4f46e5;
+  --indigo-light: #eef2ff;
+
+  --text: #1e293b;
+  --text-mid: #475569;
+  --text-muted: #94a3b8;
+
+  --shadow-sm: 0 1px 4px rgba(0,0,0,.06), 0 2px 10px rgba(0,0,0,.04);
+  --shadow: 0 2px 12px rgba(0,0,0,.08), 0 1px 4px rgba(0,0,0,.04);
+  --shadow-key: 0 4px 20px rgba(13,148,136,.18);
+  --shadow-amber: 0 4px 20px rgba(217,119,6,.18);
+
+  --radius: 16px;
+  --radius-sm: 10px;
+  --font: 'Noto Sans TC', 'PingFang TC', sans-serif;
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+body { font-family: var(--font); background: var(--bg); color: var(--text); min-height: 100vh; padding-bottom: 80px; }
+
+/* ── SPLASH ── */
+#splash { position: fixed; inset: 0; z-index: 9999; display: flex; flex-direction: column; align-items: center; justify-content: flex-end; transition: opacity .7s ease, transform .7s ease; }
+#splash.hide { opacity: 0; transform: scale(1.04); pointer-events: none; }
+.splash-bg { position: absolute; inset: 0; background: linear-gradient(160deg, #0d9488 0%, #0891b2 40%, #1e3a5f 100%); }
+.splash-pattern { position: absolute; inset: 0; opacity: .06; background-image: repeating-linear-gradient(45deg, #fff 0, #fff 1px, transparent 0, transparent 50%); background-size: 24px 24px; }
+.splash-content { position: relative; z-index: 1; text-align: center; padding: 0 32px 60px; }
+.splash-eyebrow { font-size: 10px; letter-spacing: 5px; text-transform: uppercase; color: rgba(255,255,255,.65); margin-bottom: 10px; font-weight: 600; }
+.splash-title { font-size: 38px; font-weight: 900; color: #fff; letter-spacing: 3px; line-height: 1.2; margin-bottom: 6px; }
+.splash-sub { font-size: 13px; color: rgba(255,255,255,.55); letter-spacing: 2px; margin-bottom: 36px; }
+.splash-dots { display: flex; gap: 8px; justify-content: center; }
+.splash-dot { width: 6px; height: 6px; border-radius: 50%; background: rgba(255,255,255,.3); animation: dotPulse 1.4s ease-in-out infinite; }
+.splash-dot:nth-child(2) { animation-delay: .25s; } .splash-dot:nth-child(3) { animation-delay: .5s; }
+@keyframes dotPulse { 0%,100% { transform: scale(.7); opacity: .3; } 50% { transform: scale(1.3); opacity: 1; background: #fff; } }
+
+/* ── HEADER ── */
+.app-header { background: linear-gradient(135deg, var(--teal) 0%, #0891b2 100%); padding: 52px 20px 22px; text-align: center; position: relative; overflow: hidden; }
+.app-header::after { content: ''; position: absolute; bottom: -1px; left: 0; right: 0; height: 20px; background: var(--bg); border-radius: 50% 50% 0 0 / 20px 20px 0 0; }
+.header-eyebrow { font-size: 9px; letter-spacing: 5px; text-transform: uppercase; color: rgba(255,255,255,.65); margin-bottom: 8px; font-weight: 700; }
+.app-header h1 { font-size: 22px; font-weight: 900; color: #fff; letter-spacing: 2px; margin-bottom: 6px; }
+.header-date { font-size: 11px; color: rgba(255,255,255,.65); letter-spacing: 1px; }
+
+/* ── NAV ── */
+.top-nav { position: sticky; top: 0; z-index: 100; background: var(--surface); border-bottom: 1.5px solid var(--border); display: flex; overflow-x: auto; scrollbar-width: none; padding: 0 4px; box-shadow: 0 2px 8px rgba(0,0,0,.06); }
+.top-nav::-webkit-scrollbar { display: none; }
+.nav-btn { flex-shrink: 0; padding: 11px 11px 9px; font-size: 11px; font-weight: 600; color: var(--text-muted); background: none; border: none; border-bottom: 2.5px solid transparent; cursor: pointer; font-family: var(--font); white-space: nowrap; transition: all .2s; display: flex; flex-direction: column; align-items: center; gap: 3px; }
+.nav-icon { font-size: 15px; }
+.nav-btn.active { color: var(--teal); border-bottom-color: var(--teal); }
+
+/* ── PAGE ── */
+.page { display: none; padding: 16px; }
+.page.active { display: block; }
+
+/* ── CARD ── */
+.card { background: var(--card); border-radius: var(--radius); border: 1.5px solid var(--border); box-shadow: var(--shadow-sm); margin-bottom: 14px; overflow: hidden; }
+.card-header { padding: 14px 16px; display: flex; align-items: center; gap: 12px; background: var(--card2); border-bottom: 1px solid var(--border); }
+.card-icon { width: 36px; height: 36px; border-radius: 10px; background: var(--teal-light); border: 1.5px solid rgba(13,148,136,.2); display: flex; align-items: center; justify-content: center; font-size: 17px; flex-shrink: 0; }
+.card-title { font-size: 14px; font-weight: 700; color: var(--text); }
+.card-sub { font-size: 11px; color: var(--text-muted); margin-top: 1px; }
+.card-body { padding: 16px; }
+
+/* ── KEY BOX（重點訂位代碼）── */
+.key-box {
+  background: linear-gradient(135deg, var(--amber-light) 0%, #fef3c7 100%);
+  border: 2px solid var(--amber);
+  border-radius: var(--radius-sm);
+  padding: 16px 18px;
+  margin-bottom: 16px;
+  box-shadow: var(--shadow-amber);
+  position: relative;
+  overflow: hidden;
+}
+.key-box::before {
+  content: '🔑';
+  position: absolute;
+  right: 14px;
+  top: 12px;
+  font-size: 28px;
+  opacity: .18;
+}
+.key-box-label {
+  font-size: 9px;
+  font-weight: 800;
+  color: var(--amber-dark);
+  text-transform: uppercase;
+  letter-spacing: 2.5px;
+  margin-bottom: 6px;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+.key-box-label::before { content: ''; display: inline-block; width: 3px; height: 12px; background: var(--amber); border-radius: 2px; }
+.key-code {
+  font-size: 34px;
+  font-weight: 900;
+  letter-spacing: 7px;
+  color: var(--amber-dark);
+  text-shadow: 0 1px 0 rgba(180,83,9,.2);
+  line-height: 1.1;
+}
+.key-code-sm {
+  font-size: 24px;
+  letter-spacing: 4px;
+}
+.key-sub { font-size: 11px; color: var(--amber); margin-top: 6px; font-weight: 600; }
+
+/* 訂房資訊次要框 */
+.info-box {
+  background: var(--indigo-light);
+  border: 1.5px solid rgba(79,70,229,.2);
+  border-radius: var(--radius-sm);
+  padding: 14px 16px;
+  margin-bottom: 14px;
+}
+.info-box-label { font-size: 9px; font-weight: 800; color: var(--indigo); text-transform: uppercase; letter-spacing: 2px; margin-bottom: 8px; }
+.info-box-val { font-size: 18px; font-weight: 800; color: var(--indigo); margin-bottom: 4px; }
+.info-box-note { font-size: 12px; color: var(--text-mid); line-height: 1.6; }
+
+/* ── TIMELINE ── */
+.timeline { display: flex; flex-direction: column; }
+.tl-item { display: flex; gap: 12px; padding-bottom: 16px; }
+.tl-item:last-child { padding-bottom: 0; }
+.tl-left { display: flex; flex-direction: column; align-items: center; }
+.tl-dot { width: 10px; height: 10px; border-radius: 50%; background: var(--border-em); flex-shrink: 0; margin-top: 4px; }
+.tl-dot.teal { background: var(--teal); box-shadow: 0 0 0 3px var(--teal-light); }
+.tl-dot.amber { background: var(--amber); box-shadow: 0 0 0 3px var(--amber-light); }
+.tl-dot.coral { background: var(--coral); box-shadow: 0 0 0 3px var(--coral-light); }
+.tl-dot.indigo { background: var(--indigo); box-shadow: 0 0 0 3px var(--indigo-light); }
+.tl-line { width: 1.5px; flex: 1; background: var(--border); margin-top: 4px; }
+.tl-item:last-child .tl-line { display: none; }
+.tl-time { font-size: 11px; color: var(--teal); font-weight: 700; margin-bottom: 2px; }
+.tl-desc { font-size: 14px; color: var(--text); font-weight: 600; line-height: 1.4; }
+.tl-detail { font-size: 12px; color: var(--text-muted); margin-top: 3px; line-height: 1.5; }
+.map-btn { display: inline-flex; align-items: center; gap: 4px; font-size: 11.5px; color: var(--teal); background: var(--teal-light); border: 1px solid rgba(13,148,136,.25); border-radius: 8px; padding: 4px 10px; margin-top: 6px; text-decoration: none; font-weight: 700; }
+
+.divider { border: none; border-top: 1px solid var(--border); margin: 14px 0; }
+.sec-label { font-size: 9px; font-weight: 800; letter-spacing: 2px; text-transform: uppercase; color: var(--teal); margin: 16px 0 8px; display: flex; align-items: center; gap: 6px; }
+.sec-label::after { content: ''; flex: 1; height: 1px; background: var(--teal-light); border: 1px solid rgba(13,148,136,.15); }
+
+.notice { background: #fffbeb; border-left: 3px solid var(--amber); border-radius: 0 10px 10px 0; padding: 10px 12px; margin-top: 12px; font-size: 12.5px; color: var(--text-mid); line-height: 1.55; }
+.notice strong { color: var(--amber-dark); }
+.notice-teal { background: var(--teal-light); border-left: 3px solid var(--teal); border-radius: 0 10px 10px 0; padding: 10px 12px; margin-top: 12px; font-size: 12.5px; color: var(--text-mid); line-height: 1.55; }
+
+.info-row { display: flex; gap: 8px; margin-bottom: 8px; align-items: flex-start; }
+.info-label { font-size: 10px; font-weight: 800; color: var(--text-muted); min-width: 52px; padding-top: 1px; text-transform: uppercase; letter-spacing: .5px; }
+.info-value { font-size: 13.5px; color: var(--text); flex: 1; line-height: 1.5; }
+.info-value a { color: var(--teal); text-decoration: none; }
+
+.transport-chip { display: inline-flex; align-items: center; gap: 5px; background: var(--teal-light); color: var(--teal-dark); border: 1.5px solid rgba(13,148,136,.25); border-radius: 8px; padding: 5px 10px; font-size: 11.5px; font-weight: 700; margin-bottom: 12px; }
+
+.step-box { display: flex; gap: 10px; margin-bottom: 12px; }
+.step-num { width: 22px; height: 22px; border-radius: 50%; background: var(--teal); color: #fff; font-size: 11px; font-weight: 900; display: flex; align-items: center; justify-content: center; flex-shrink: 0; margin-top: 1px; }
+.step-text { font-size: 13.5px; line-height: 1.55; color: var(--text); flex: 1; }
+.step-text small { color: var(--text-muted); font-size: 12px; }
+
+/* ── WEATHER ── */
+.weather-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 8px; }
+.weather-card { background: var(--card2); border-radius: 12px; padding: 12px 6px; text-align: center; border: 1px solid var(--border); }
+.weather-date { font-size: 10.5px; font-weight: 700; color: var(--teal); margin-bottom: 4px; }
+.weather-icon { font-size: 22px; margin-bottom: 3px; }
+.weather-temp { font-size: 11.5px; color: var(--text); font-weight: 600; }
+.weather-desc { font-size: 10px; color: var(--text-muted); margin-top: 2px; }
+
+/* ── DAY TABS ── */
+.day-tabs { display: flex; gap: 6px; overflow-x: auto; scrollbar-width: none; margin-bottom: 14px; }
+.day-tabs::-webkit-scrollbar { display: none; }
+.day-tab { flex-shrink: 0; padding: 6px 12px; border-radius: 20px; font-size: 12px; font-weight: 700; cursor: pointer; border: 1.5px solid var(--border); color: var(--text-muted); background: var(--card); font-family: var(--font); transition: all .18s; }
+.day-tab.active { background: var(--teal); color: #fff; border-color: var(--teal); box-shadow: 0 2px 8px rgba(13,148,136,.25); }
+.day-panel { display: none; }
+.day-panel.active { display: block; }
+
+/* ── SHOP ── */
+.shop-cat-title { font-size: 10px; font-weight: 800; letter-spacing: 1.5px; text-transform: uppercase; color: var(--teal-dark); margin-bottom: 8px; display: flex; align-items: center; gap: 6px; }
+.shop-cat-title::after { content: ''; flex: 1; height: 1px; background: var(--teal-light); border: 1px solid rgba(13,148,136,.15); }
+.shop-item { background: var(--card2); border: 1px solid var(--border); border-radius: 12px; padding: 12px 14px; margin-bottom: 8px; }
+.shop-item-header { display: flex; align-items: flex-start; gap: 10px; margin-bottom: 6px; }
+.shop-item-icon { width: 34px; height: 34px; border-radius: 9px; background: var(--teal-light); display: flex; align-items: center; justify-content: center; font-size: 16px; flex-shrink: 0; border: 1px solid rgba(13,148,136,.15); }
+.shop-item-name { font-size: 14px; font-weight: 700; color: var(--text); line-height: 1.3; }
+.shop-item-addr { font-size: 11.5px; color: var(--text-muted); margin-top: 2px; }
+.shop-item-desc { font-size: 12.5px; color: var(--text-mid); line-height: 1.5; margin-bottom: 6px; }
+.nearby-tag { display: inline-flex; align-items: center; gap: 3px; background: var(--amber-light); color: var(--amber-dark); border: 1px solid var(--amber-border); border-radius: 6px; padding: 2px 8px; font-size: 11px; font-weight: 700; margin-bottom: 6px; }
+
+/* ── WISH ── */
+.wish-wrap { border-radius: var(--radius); overflow: hidden; box-shadow: var(--shadow-sm); margin-bottom: 12px; border: 1.5px solid var(--border); }
+.wish-header { background: linear-gradient(135deg, var(--teal) 0%, #0891b2 100%); padding: 16px 18px 14px; color: #fff; display: flex; align-items: center; justify-content: space-between; }
+.wish-header h3 { font-size: 15px; font-weight: 800; color: #fff; }
+.wish-header p { font-size: 11px; color: rgba(255,255,255,.65); margin-top: 2px; }
+.wish-add-fab { width: 36px; height: 36px; border-radius: 50%; background: rgba(255,255,255,.2); border: 2px solid rgba(255,255,255,.4); color: #fff; font-size: 22px; display: flex; align-items: center; justify-content: center; cursor: pointer; font-family: var(--font); }
+.wish-filter-bar { background: var(--card2); padding: 10px 12px; display: flex; gap: 6px; overflow-x: auto; scrollbar-width: none; border-bottom: 1px solid var(--border); }
+.wish-filter-bar::-webkit-scrollbar { display: none; }
+.wish-filter-btn { flex-shrink: 0; padding: 5px 12px; border-radius: 20px; font-size: 12px; font-weight: 700; cursor: pointer; border: 1.5px solid var(--border); color: var(--text-muted); background: transparent; font-family: var(--font); transition: all .18s; }
+.wish-filter-btn.active { background: var(--teal); color: #fff; border-color: var(--teal); }
+.wish-list-wrap { background: var(--card); min-height: 60px; }
+.wish-cat-header { padding: 7px 16px; font-size: 10px; font-weight: 800; color: var(--teal-dark); text-transform: uppercase; letter-spacing: .7px; background: var(--teal-light); border-bottom: 1px solid rgba(13,148,136,.12); border-top: 1px solid rgba(13,148,136,.1); }
+.wish-empty { padding: 28px 18px; text-align: center; color: var(--text-muted); font-size: 13px; line-height: 1.7; }
+.wish-item { display: flex; align-items: flex-start; padding: 12px 16px; border-bottom: 1px solid var(--border); gap: 10px; animation: fadeUp .22s ease; }
+.wish-item:last-child { border-bottom: none; }
+.wish-item-icon { width: 34px; height: 34px; border-radius: 10px; background: var(--teal-light); display: flex; align-items: center; justify-content: center; font-size: 16px; flex-shrink: 0; border: 1px solid rgba(13,148,136,.15); }
+.wish-main { flex: 1; min-width: 0; }
+.wish-name { font-size: 14px; font-weight: 700; color: var(--text); display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
+.visited-badge { font-size: 10px; font-weight: 700; background: rgba(13,148,136,.1); color: var(--teal-dark); border-radius: 5px; padding: 1px 7px; border: 1px solid rgba(13,148,136,.25); }
+.wish-addr { font-size: 11.5px; color: var(--text-muted); margin-top: 2px; }
+.wish-note { font-size: 12px; color: var(--amber-dark); margin-top: 4px; background: var(--amber-light); border-radius: 6px; padding: 3px 8px; display: inline-block; }
+.wish-actions { display: flex; gap: 5px; margin-top: 6px; flex-wrap: wrap; }
+.wish-map-btn { display: inline-flex; align-items: center; gap: 3px; font-size: 11px; color: var(--teal); background: var(--teal-light); border: 1px solid rgba(13,148,136,.25); border-radius: 7px; padding: 3px 9px; text-decoration: none; font-weight: 700; }
+.wish-act-btn { display: inline-flex; align-items: center; gap: 3px; font-size: 11px; font-weight: 700; border-radius: 7px; padding: 3px 9px; cursor: pointer; border: none; font-family: var(--font); }
+.wish-act-btn.visit { background: var(--teal-light); color: var(--teal-dark); border: 1px solid rgba(13,148,136,.25); }
+.wish-act-btn.visit.done { background: rgba(13,148,136,.15); }
+.wish-act-btn.edit { background: var(--amber-light); color: var(--amber-dark); border: 1px solid var(--amber-border); }
+.wish-del-btn { background: none; border: none; color: var(--text-muted); font-size: 14px; cursor: pointer; padding: 0; opacity: .3; line-height: 1; align-self: flex-start; flex-shrink: 0; margin-top: 2px; }
+.wish-bottom-bar { background: var(--card2); border-top: 1px solid var(--border); padding: 10px 14px; display: flex; align-items: center; gap: 8px; }
+.wish-bottom-txt { font-size: 11.5px; color: var(--text-muted); flex: 1; line-height: 1.4; }
+.wish-bottom-btn { padding: 6px 13px; border-radius: 9px; font-size: 12px; font-weight: 700; border: none; cursor: pointer; font-family: var(--font); white-space: nowrap; flex-shrink: 0; }
+.wish-bottom-btn.solid { background: var(--teal); color: #fff; }
+.wish-bottom-btn.outline { background: transparent; color: var(--teal); border: 1.5px solid rgba(13,148,136,.35); }
+
+/* ── FX ── */
+.fx-live-hero {
+  background: linear-gradient(135deg, var(--teal) 0%, #0891b2 100%);
+  border-radius: var(--radius);
+  padding: 24px 20px 20px;
+  margin-bottom: 14px;
+  text-align: center;
+  box-shadow: var(--shadow-key);
+  position: relative;
+  overflow: hidden;
+}
+.fx-live-hero::before { content: '¥'; position: absolute; right: 16px; top: 10px; font-size: 80px; font-weight: 900; color: rgba(255,255,255,.08); line-height: 1; }
+.fx-loading-ring { display: inline-block; width: 20px; height: 20px; border: 2.5px solid rgba(255,255,255,.3); border-top-color: #fff; border-radius: 50%; animation: spin .7s linear infinite; vertical-align: middle; margin-right: 8px; }
+@keyframes spin { to { transform: rotate(360deg); } }
+.fx-live-label { font-size: 10px; letter-spacing: 3px; text-transform: uppercase; color: rgba(255,255,255,.65); font-weight: 700; margin-bottom: 12px; }
+.fx-live-rate-big { font-size: 48px; font-weight: 900; color: #fff; line-height: 1; margin-bottom: 4px; }
+.fx-live-unit { font-size: 13px; color: rgba(255,255,255,.65); margin-bottom: 16px; font-weight: 500; }
+.fx-live-updated { font-size: 11px; color: rgba(255,255,255,.5); margin-top: 8px; }
+.fx-refresh-btn { background: rgba(255,255,255,.15); border: 1.5px solid rgba(255,255,255,.3); color: #fff; border-radius: 10px; padding: 7px 16px; font-size: 12px; font-weight: 700; cursor: pointer; font-family: var(--font); display: inline-flex; align-items: center; gap: 5px; }
+.fx-display { background: var(--card2); border: 1.5px solid var(--border); border-radius: var(--radius-sm); padding: 18px; margin-bottom: 14px; text-align: center; }
+.fx-display-label { font-size: 10px; color: var(--text-muted); letter-spacing: 2px; text-transform: uppercase; margin-bottom: 8px; font-weight: 700; }
+.fx-display-jpy { font-size: 38px; font-weight: 900; color: var(--text); letter-spacing: -1px; }
+.fx-display-twd { font-size: 22px; font-weight: 800; color: var(--teal); margin-top: 8px; }
+.fx-display-note { font-size: 11px; color: var(--text-muted); margin-top: 5px; }
+.fx-numpad { display: grid; grid-template-columns: repeat(3,1fr); gap: 8px; margin-bottom: 12px; }
+.fx-key { padding: 16px 8px; border-radius: 12px; border: 1.5px solid var(--border); background: var(--card); font-size: 19px; font-weight: 700; color: var(--text); cursor: pointer; font-family: var(--font); text-align: center; transition: all .1s; -webkit-tap-highlight-color: transparent; }
+.fx-key:active { background: var(--teal-light); border-color: var(--teal); transform: scale(.96); }
+.fx-key.del { background: var(--coral-light); color: var(--coral); border-color: rgba(239,68,68,.25); }
+.fx-key.zero { grid-column: span 2; }
+.fx-hist-item { display: flex; justify-content: space-between; align-items: center; padding: 10px 0; border-bottom: 1px solid var(--border); }
+.fx-hist-item:last-child { border-bottom: none; }
+.fx-hist-jpy { font-size: 14px; font-weight: 700; color: var(--text); }
+.fx-hist-twd { font-size: 16px; font-weight: 900; color: var(--teal); }
+.fx-hist-rate { font-size: 11px; color: var(--text-muted); margin-top: 2px; }
+
+/* ── EXPENSE ── */
+.exp-header { background: linear-gradient(135deg, var(--teal) 0%, #0891b2 100%); padding: 18px 18px 14px; }
+.exp-header h2 { font-size: 16px; font-weight: 800; color: #fff; }
+.exp-header p { font-size: 11px; color: rgba(255,255,255,.65); margin-top: 2px; }
+.summary-strip { background: var(--card); display: flex; padding: 14px 0; border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); }
+.sum-col { flex: 1; text-align: center; border-right: 1px solid var(--border); }
+.sum-col:last-child { border-right: none; }
+.sum-label { font-size: 9.5px; color: var(--text-muted); letter-spacing: .5px; text-transform: uppercase; font-weight: 700; }
+.sum-val { font-size: 18px; font-weight: 800; color: var(--text); margin-top: 3px; }
+.sum-val.you { color: var(--teal); }
+.sum-val.sis { color: var(--indigo); }
+.exp-tabs-bar { background: var(--card2); display: flex; border-bottom: 1px solid var(--border); }
+.exp-tab { flex: 1; padding: 11px 6px; text-align: center; font-size: 13px; font-weight: 700; color: var(--text-muted); cursor: pointer; border-bottom: 2.5px solid transparent; background: none; border-top: none; border-left: none; border-right: none; font-family: var(--font); transition: all .2s; }
+.exp-tab.active { color: var(--teal); border-bottom-color: var(--teal); }
+.exp-form { background: var(--card); padding: 16px; }
+.form-row { margin-bottom: 12px; }
+.form-label { font-size: 10px; font-weight: 800; color: var(--text-muted); letter-spacing: .8px; text-transform: uppercase; margin-bottom: 6px; display: block; }
+.form-input { width: 100%; border: 1.5px solid var(--border); border-radius: 10px; padding: 10px 12px; font-size: 14px; color: var(--text); background: var(--card); font-family: var(--font); outline: none; -webkit-appearance: none; }
+.form-input:focus { border-color: var(--teal); }
+.form-row-2col { display: flex; gap: 10px; margin-bottom: 12px; }
+.form-row-2col .form-row { flex: 1; margin-bottom: 0; }
+.toggle-group { display: flex; gap: 6px; }
+.toggle-btn { flex: 1; padding: 9px 4px; border-radius: 10px; border: 1.5px solid var(--border); background: var(--card2); font-size: 12px; font-weight: 700; color: var(--text-muted); cursor: pointer; text-align: center; font-family: var(--font); transition: all .2s; }
+.toggle-btn.teal-active { border-color: var(--teal); background: var(--teal-light); color: var(--teal-dark); }
+.toggle-btn.amber-active { border-color: var(--amber); background: var(--amber-light); color: var(--amber-dark); }
+.toggle-btn.indigo-active { border-color: var(--indigo); background: var(--indigo-light); color: var(--indigo); }
+.add-btn { width: 100%; padding: 14px; background: var(--teal); color: #fff; border: none; border-radius: 12px; font-size: 14px; font-weight: 800; cursor: pointer; font-family: var(--font); letter-spacing: .5px; margin-top: 4px; transition: opacity .2s; box-shadow: 0 4px 15px rgba(13,148,136,.25); }
+.add-btn:active { opacity: .85; }
+.exp-list-wrap { background: var(--card); min-height: 60px; }
+.exp-empty { padding: 32px 18px; text-align: center; color: var(--text-muted); font-size: 13px; line-height: 1.7; }
+@keyframes fadeUp { from { opacity: 0; transform: translateY(-4px); } to { opacity: 1; transform: none; } }
+.exp-item { display: flex; align-items: flex-start; padding: 13px 16px; border-bottom: 1px solid var(--border); gap: 10px; animation: fadeUp .25s ease; }
+.exp-item:last-child { border-bottom: none; }
+.exp-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; margin-top: 5px; }
+.exp-dot.you { background: var(--teal); }
+.exp-dot.sis { background: var(--indigo); }
+.exp-dot.both { background: var(--text-muted); }
+.exp-main { flex: 1; }
+.exp-item-name { font-size: 14px; font-weight: 700; color: var(--text); }
+.exp-meta { font-size: 11.5px; color: var(--text-muted); margin-top: 3px; }
+.exp-mbadge { display: inline-block; font-size: 10px; padding: 1px 7px; border-radius: 20px; font-weight: 700; margin-left: 4px; }
+.exp-mbadge.cash { background: rgba(13,148,136,.1); color: var(--teal-dark); border: 1px solid rgba(13,148,136,.2); }
+.exp-mbadge.paypay { background: var(--coral-light); color: var(--coral); border: 1px solid rgba(239,68,68,.2); }
+.exp-mbadge.card { background: var(--indigo-light); color: var(--indigo); border: 1px solid rgba(79,70,229,.2); }
+.exp-right { text-align: right; flex-shrink: 0; }
+.exp-amount { font-size: 15px; font-weight: 800; color: var(--text); }
+.exp-split-detail { font-size: 11px; color: var(--text-muted); margin-top: 3px; line-height: 1.4; }
+.exp-del { background: none; border: none; color: var(--text-muted); font-size: 16px; cursor: pointer; padding: 0 0 0 6px; line-height: 1; flex-shrink: 0; margin-top: 1px; opacity: .35; }
+.exp-panel { display: none; } .exp-panel.active { display: block; }
+.date-group-header { padding: 7px 16px; font-size: 10px; font-weight: 800; color: var(--teal-dark); text-transform: uppercase; letter-spacing: .8px; background: var(--teal-light); border-bottom: 1px solid rgba(13,148,136,.1); }
+.stats-grid { display: flex; gap: 8px; margin-bottom: 14px; }
+.stat-box.teal { background: var(--teal-light); border: 1px solid rgba(13,148,136,.2); border-radius: 12px; padding: 12px 8px; text-align: center; }
+.stat-box.purple { background: var(--indigo-light); border: 1px solid rgba(79,70,229,.2); border-radius: 12px; padding: 12px 8px; text-align: center; }
+.settle-box { background: var(--teal-light); border: 1.5px solid rgba(13,148,136,.25); border-radius: 12px; padding: 14px; font-size: 13.5px; color: var(--text); line-height: 1.7; }
+
+/* ── GIST ── */
+.gist-box { background: var(--card2); border: 1px solid var(--border); border-radius: 12px; padding: 14px; margin-bottom: 12px; }
+.gist-status { display: inline-flex; align-items: center; gap: 5px; font-size: 12px; font-weight: 700; padding: 4px 10px; border-radius: 20px; margin-bottom: 10px; }
+.gist-status.connected { background: rgba(13,148,136,.1); color: var(--teal-dark); border: 1px solid rgba(13,148,136,.25); }
+.gist-status.disconnected { background: var(--amber-light); color: var(--amber-dark); border: 1px solid var(--amber-border); }
+.gist-btn { display: inline-flex; align-items: center; gap: 5px; padding: 9px 14px; border-radius: 10px; font-size: 13px; font-weight: 700; border: none; cursor: pointer; font-family: var(--font); transition: opacity .2s; margin-right: 6px; margin-bottom: 6px; }
+.gist-btn.primary { background: var(--teal); color: #fff; }
+.gist-btn.secondary { background: var(--teal-light); color: var(--teal-dark); border: 1.5px solid rgba(13,148,136,.25); }
+.gist-btn.danger { background: var(--coral-light); color: var(--coral); border: 1.5px solid rgba(239,68,68,.25); }
+.gist-btn:active { opacity: .75; }
+.gist-token-row { display: flex; gap: 8px; margin-top: 10px; }
+.export-btn { display: inline-flex; align-items: center; gap: 5px; padding: 8px 14px; border-radius: 10px; background: var(--teal); color: #fff; font-size: 12px; font-weight: 800; border: none; cursor: pointer; font-family: var(--font); margin-top: 10px; margin-right: 8px; transition: opacity .2s; }
+.export-btn:active { opacity: .8; }
+.export-btn.outline { background: transparent; color: var(--teal); border: 1.5px solid rgba(13,148,136,.35); }
+
+/* ── SYNC INDICATOR ── */
+.sync-indicator { position: fixed; bottom: 70px; right: 16px; background: var(--teal); color: #fff; border-radius: 20px; padding: 6px 14px; font-size: 12px; font-weight: 800; z-index: 500; opacity: 0; transition: opacity .3s; pointer-events: none; box-shadow: 0 4px 12px rgba(13,148,136,.3); }
+.sync-indicator.show { opacity: 1; }
+
+/* ── MODAL ── */
+.modal-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,.35); z-index: 200; align-items: flex-end; justify-content: center; backdrop-filter: blur(3px); }
+.modal-overlay.open { display: flex; }
+.modal-sheet { background: var(--card); border-radius: 22px 22px 0 0; width: 100%; max-width: 520px; max-height: 92vh; overflow-y: auto; padding: 0 0 env(safe-area-inset-bottom,0); animation: slideUp .28s ease; border-top: 1.5px solid var(--border); }
+@keyframes slideUp { from { transform: translateY(100%); } to { transform: translateY(0); } }
+.modal-handle { width: 36px; height: 4px; background: var(--border-em); border-radius: 4px; margin: 12px auto 0; }
+.modal-title { font-size: 16px; font-weight: 800; color: var(--text); padding: 14px 18px 0; margin-bottom: 14px; }
+.modal-body { padding: 0 18px 20px; }
+.modal-actions { display: flex; gap: 8px; margin-top: 14px; }
+.modal-cancel { flex: 1; padding: 12px; border-radius: 12px; border: 1.5px solid var(--border); background: var(--card2); color: var(--text-muted); font-size: 14px; font-weight: 700; cursor: pointer; font-family: var(--font); }
+.modal-submit { flex: 2; padding: 12px; border-radius: 12px; border: none; background: var(--teal); color: #fff; font-size: 14px; font-weight: 800; cursor: pointer; font-family: var(--font); }
+.cat-chips { display: flex; flex-wrap: wrap; gap: 6px; }
+.cat-chip { padding: 6px 12px; border-radius: 20px; font-size: 12.5px; font-weight: 700; cursor: pointer; border: 1.5px solid var(--border); color: var(--text-muted); background: transparent; font-family: var(--font); transition: all .18s; }
+.cat-chip.active { background: var(--teal); color: #fff; border-color: var(--teal); }
+.new-cat-row { display: flex; gap: 8px; margin-top: 8px; }
+.new-cat-input { flex: 1; }
+.new-cat-btn { padding: 10px 14px; border-radius: 10px; background: var(--teal-light); color: var(--teal-dark); font-size: 13px; font-weight: 800; border: 1px solid rgba(13,148,136,.25); cursor: pointer; font-family: var(--font); }
+.import-strip { background: var(--card); border: 1.5px solid var(--border); border-radius: var(--radius); padding: 14px 16px; margin-bottom: 12px; }
+
+/* PWA BANNER */
+.pwa-banner { background: var(--teal-light); border: 1.5px solid rgba(13,148,136,.25); border-radius: var(--radius); padding: 12px 16px; margin: 0 0 12px; position: relative; }
+.pwa-banner-title { font-size: 12px; font-weight: 800; color: var(--teal-dark); margin-bottom: 4px; }
+.pwa-banner-text { font-size: 11.5px; color: var(--text-muted); line-height: 1.5; }
+.pwa-close { position: absolute; top: 8px; right: 10px; background: none; border: none; color: var(--text-muted); font-size: 18px; cursor: pointer; line-height: 1; }
+
+.footer-note { text-align: center; font-size: 11px; color: var(--text-muted); padding: 20px; letter-spacing: .5px; }
+</style>
+</head>
+<body>
+
+<!-- SPLASH -->
+<div id="splash">
+  <div class="splash-bg"></div>
+  <div class="splash-pattern"></div>
+  <div class="splash-content">
+    <p class="splash-eyebrow">旅遊指南 · 2026</p>
+    <h1 class="splash-title">岡山・尾道<br>倉敷</h1>
+    <p class="splash-sub">5月13日 — 5月18日</p>
+    <div class="splash-dots">
+      <div class="splash-dot"></div>
+      <div class="splash-dot"></div>
+      <div class="splash-dot"></div>
+    </div>
+  </div>
+</div>
+
+<div class="app-header">
+  <p class="header-eyebrow">✦ 旅遊指南 2026 ✦</p>
+  <h1>岡山 · 尾道 · 倉敷</h1>
+  <p class="header-date">5月13日（三）— 5月18日（一）｜6天5夜</p>
+</div>
+
+<nav class="top-nav">
+  <button class="nav-btn active" onclick="showPage('flight')" id="nav-flight"><span class="nav-icon">✈️</span>機票</button>
+  <button class="nav-btn" onclick="showPage('hotel')" id="nav-hotel"><span class="nav-icon">🏨</span>住宿</button>
+  <button class="nav-btn" onclick="showPage('days')" id="nav-days"><span class="nav-icon">📅</span>行程</button>
+  <button class="nav-btn" onclick="showPage('weather')" id="nav-weather"><span class="nav-icon">🌤</span>天氣</button>
+  <button class="nav-btn" onclick="showPage('route')" id="nav-route"><span class="nav-icon">🗺️</span>路線</button>
+  <button class="nav-btn" onclick="showPage('shop')" id="nav-shop"><span class="nav-icon">🛍️</span>逛街</button>
+  <button class="nav-btn" onclick="showPage('expense')" id="nav-expense"><span class="nav-icon">💴</span>記帳</button>
+  <button class="nav-btn" onclick="showPage('fx')" id="nav-fx"><span class="nav-icon">💱</span>匯率</button>
+</nav>
+
+<!-- ══ FLIGHT ══ -->
+<div class="page active" id="page-flight">
+  <div id="pwa-install-banner" class="pwa-banner" style="display:none">
+    <div class="pwa-banner-title">📲 加入手機主畫面</div>
+    <div class="pwa-banner-text">Chrome右上角 ⋮ →「新增到主畫面」，隨時查閱不需網路！</div>
+    <button class="pwa-close" onclick="dismissPwaBanner()">×</button>
+  </div>
+  <div class="card">
+    <div class="card-header"><div class="card-icon">✈️</div><div><div class="card-title">機票行程</div><div class="card-sub">虎航 IT262 / IT263</div></div></div>
+    <div class="card-body">
+      <div class="key-box">
+        <div class="key-box-label">訂位代號 · 虎航 TigerAir</div>
+        <div class="key-code">I2WRMY</div>
+        <div class="key-sub">⚡ 報到時出示此代號</div>
+      </div>
+      <div class="sec-label">去程</div>
+      <div class="timeline">
+        <div class="tl-item"><div class="tl-left"><div class="tl-dot"></div><div class="tl-line"></div></div><div><div class="tl-time">5/13（三）12:40</div><div class="tl-desc">高雄小港機場（KHH）出發</div><div class="tl-detail">虎航 IT262 · 記得提早3小時報到</div></div></div>
+        <div class="tl-item"><div class="tl-left"><div class="tl-dot teal"></div></div><div><div class="tl-time">5/13（三）16:30</div><div class="tl-desc">岡山桃太郎機場（OKJ）抵達</div><div class="tl-detail">飛行約2.5小時 · 抵達後搭機場巴士</div></div></div>
+      </div>
+      <hr class="divider">
+      <div class="sec-label">回程</div>
+      <div class="timeline">
+        <div class="tl-item"><div class="tl-left"><div class="tl-dot"></div><div class="tl-line"></div></div><div><div class="tl-time">5/18（一）14:30–15:00</div><div class="tl-desc">岡山站西口搭機場巴士出發</div><div class="tl-detail">建議搭14:30–15:00的班次</div></div></div>
+        <div class="tl-item"><div class="tl-left"><div class="tl-dot teal"></div></div><div><div class="tl-time">5/18（一）17:55</div><div class="tl-desc">岡山桃太郎機場（OKJ）起飛</div><div class="tl-detail">虎航 IT263 → 高雄20:15抵達</div></div></div>
+      </div>
+      <div class="notice"><strong>⚠️ 液體規定：</strong>在尾道大和屋酒舗購買的日本酒，務必放置於<strong>託運行李</strong>，不可手提上機。</div>
+    </div>
+  </div>
+</div>
+
+<!-- ══ HOTEL ══ -->
+<div class="page" id="page-hotel">
+  <div class="card">
+    <div class="card-header"><div class="card-icon">🏨</div><div><div class="card-title">岡山後樂飯店</div><div class="card-sub">5/13 Check-in → 5/18 Check-out</div></div></div>
+    <div class="card-body">
+      <div class="key-box">
+        <div class="key-box-label">訂單號碼 · Booking.com</div>
+        <div class="key-code key-code-sm">TY33873084</div>
+        <div class="key-sub">👤 An Wang</div>
+      </div>
+      <div class="info-box">
+        <div class="info-box-label">🏷 房型</div>
+        <div class="info-box-val">Superior Twin Room</div>
+        <div class="info-box-note">禁菸房 · 入住 15:00後 · 退房 11:00前</div>
+      </div>
+      <div class="sec-label">飯店資訊</div>
+      <div class="info-row"><span class="info-label">地址</span><span class="info-value">岡山市北区柳町1-1-22</span></div>
+      <div class="info-row"><span class="info-label">電話</span><span class="info-value"><a href="tel:+81862231221">+81-86-223-1221</a></span></div>
+      <div class="info-row"><span class="info-label">設施</span><span class="info-value">免費腳踏車租借 · 1F松本清藥妝 · 7F洗衣機（洗¥400/乾¥100）· 行李寄放</span></div>
+      <a class="map-btn" href="https://maps.google.com/?q=Okayama+Koraku+Hotel" target="_blank">📍 Google Maps</a>
+    </div>
+  </div>
+</div>
+
+<!-- ══ DAYS ══ -->
+<div class="page" id="page-days">
+  <div class="day-tabs">
+    <button class="day-tab active" onclick="showDay(0)">5/13 抵達</button>
+    <button class="day-tab" onclick="showDay(1)">5/14 岡山</button>
+    <button class="day-tab" onclick="showDay(2)">5/15 尾道</button>
+    <button class="day-tab" onclick="showDay(3)">5/16 倉敷</button>
+    <button class="day-tab" onclick="showDay(4)">5/17 神社</button>
+    <button class="day-tab" onclick="showDay(5)">5/18 回程</button>
+  </div>
+  <div class="day-panel active" id="day-0">
+    <div class="card"><div class="card-header"><div class="card-icon">🛬</div><div><div class="card-title">5月13日（三）抵達</div></div></div>
+    <div class="card-body"><div class="timeline">
+      <div class="tl-item"><div class="tl-left"><div class="tl-dot"></div><div class="tl-line"></div></div><div><div class="tl-time">16:30</div><div class="tl-desc">抵達岡山桃太郎機場</div><div class="tl-detail">辦理入境・領行李・換日幣</div></div></div>
+      <div class="tl-item"><div class="tl-left"><div class="tl-dot teal"></div><div class="tl-line"></div></div><div><div class="tl-time">17:00</div><div class="tl-desc">搭機場巴士前往JR岡山站</div><div class="tl-detail">2號月台・¥780/人・約30分・下車於西口</div><a class="map-btn" href="https://www.okayama-airport.org/tw/access/bus" target="_blank">🚌 班次表</a></div></div>
+      <div class="tl-item"><div class="tl-left"><div class="tl-dot indigo"></div><div class="tl-line"></div></div><div><div class="tl-time">17:30~</div><div class="tl-desc">步行至岡山後樂飯店 Check-in</div><div class="tl-detail">從西口地下街往高島屋方向步行約10分</div></div></div>
+      <div class="tl-item"><div class="tl-left"><div class="tl-dot"></div></div><div><div class="tl-time">晚上</div><div class="tl-desc">飯店周邊覓食・自由活動</div><div class="tl-detail">推薦：西川綠道公園散步・附近居酒屋一條街</div></div></div>
+    </div></div></div>
+  </div>
+  <div class="day-panel" id="day-1">
+    <div class="card"><div class="card-header"><div class="card-icon">🏯</div><div><div class="card-title">5月14日（四）岡山市區</div></div></div>
+    <div class="card-body"><div class="timeline">
+      <div class="tl-item"><div class="tl-left"><div class="tl-dot teal"></div><div class="tl-line"></div></div><div><div class="tl-time">上午</div><div class="tl-desc">岡山後樂園</div><div class="tl-detail">日本三大名園之一・¥410/人</div><a class="map-btn" href="https://maps.google.com/?q=Korakuen+Garden+Okayama" target="_blank">📍 Google Maps</a></div></div>
+      <div class="tl-item"><div class="tl-left"><div class="tl-dot"></div><div class="tl-line"></div></div><div><div class="tl-time">中午</div><div class="tl-desc">岡山城（烏城）</div><div class="tl-detail">緊鄰後樂園・¥320/人・黑色天守閣別具特色</div><a class="map-btn" href="https://maps.google.com/?q=Okayama+Castle" target="_blank">📍 Google Maps</a></div></div>
+      <div class="tl-item"><div class="tl-left"><div class="tl-dot teal"></div><div class="tl-line"></div></div><div><div class="tl-time">下午</div><div class="tl-desc">表町商店街漫步</div><div class="tl-detail">岡山最大商店街・逛街採買伴手禮</div></div></div>
+      <div class="tl-item"><div class="tl-left"><div class="tl-dot"></div></div><div><div class="tl-time">晚餐</div><div class="tl-desc">麺掛 一松庵</div><div class="tl-detail">清爽蛤蜊雞湯拉麵・約¥1,000–1,500/人</div></div></div>
+    </div></div></div>
+  </div>
+  <div class="day-panel" id="day-2">
+    <div class="card"><div class="card-header"><div class="card-icon">🚢</div><div><div class="card-title">5月15日（五）尾道一日遊</div></div></div>
+    <div class="card-body">
+      <div class="transport-chip">🚃 岡山站→尾道站 JR山陽本線・約70分・¥1,320</div>
+      <div class="timeline">
+        <div class="tl-item"><div class="tl-left"><div class="tl-dot teal"></div><div class="tl-line"></div></div><div><div class="tl-time">上午</div><div class="tl-desc">千光寺纜車</div><div class="tl-detail">¥500往返・俯瞰尾道水道絕景</div><a class="map-btn" href="https://maps.google.com/?q=Senkoji+Ropeway+Onomichi" target="_blank">📍 Google Maps</a></div></div>
+        <div class="tl-item"><div class="tl-left"><div class="tl-dot"></div><div class="tl-line"></div></div><div><div class="tl-time">中午</div><div class="tl-desc">貓之細道 & 艮神社</div><div class="tl-detail">沿坡道慢慢下山・尾道最有情調的小徑</div></div></div>
+        <div class="tl-item"><div class="tl-left"><div class="tl-dot teal"></div><div class="tl-line"></div></div><div><div class="tl-time">下午</div><div class="tl-desc">大和屋酒舗（尾道店）</div><div class="tl-detail">廣島地酒專賣・購買的酒放入託運行李！</div></div></div>
+        <div class="tl-item"><div class="tl-left"><div class="tl-dot"></div></div><div><div class="tl-time">晚餐</div><div class="tl-desc">尾道らーめん ベッチャー</div><div class="tl-detail">尾道名物背脂醬油拉麵・約¥900–1,200/人</div></div></div>
+      </div>
+      <div class="notice-teal"><strong>💡 回程：</strong>傍晚搭山陽本線返回岡山，末班車留意時刻表。</div>
+    </div></div>
+  </div>
+  <div class="day-panel" id="day-3">
+    <div class="card"><div class="card-header"><div class="card-icon">🏘️</div><div><div class="card-title">5月16日（六）倉敷美觀地區</div></div></div>
+    <div class="card-body">
+      <div class="transport-chip">🚃 岡山站→倉敷站 JR山陽本線・約17分・¥330</div>
+      <div class="timeline">
+        <div class="tl-item"><div class="tl-left"><div class="tl-dot teal"></div><div class="tl-line"></div></div><div><div class="tl-time">上午</div><div class="tl-desc">Field of Craft 倉敷市集</div><div class="tl-detail">當地工藝品市集・每月第三周六舉辦</div></div></div>
+        <div class="tl-item"><div class="tl-left"><div class="tl-dot"></div><div class="tl-line"></div></div><div><div class="tl-time">中午</div><div class="tl-desc">1mugi 手作甜甜圈 & 麵包</div><div class="tl-detail">職人手作甜點・排隊名店，建議早到</div><a class="map-btn" href="https://maps.google.com/?q=1mugi+倉敷" target="_blank">📍 Google Maps</a></div></div>
+        <div class="tl-item"><div class="tl-left"><div class="tl-dot teal"></div></div><div><div class="tl-time">下午</div><div class="tl-desc">倉敷美觀地區漫步</div><div class="tl-detail">江戶時代白壁建築・運河倒影・大原美術館（¥1,500）</div><a class="map-btn" href="https://maps.google.com/?q=Kurashiki+Bikan+District" target="_blank">📍 Google Maps</a></div></div>
+      </div>
+    </div></div>
+  </div>
+  <div class="day-panel" id="day-4">
+    <div class="card"><div class="card-header"><div class="card-icon">⛩️</div><div><div class="card-title">5月17日（日）神社 & 採買</div></div></div>
+    <div class="card-body">
+      <div class="transport-chip">🚃 吉備津神社：岡山站搭JR桃太郎線・約14分・¥200</div>
+      <div class="timeline">
+        <div class="tl-item"><div class="tl-left"><div class="tl-dot teal"></div><div class="tl-line"></div></div><div><div class="tl-time">上午</div><div class="tl-desc">吉備津神社</div><div class="tl-detail">360公尺木製長廊・寧靜氛圍・免費參拜</div><a class="map-btn" href="https://maps.google.com/?q=Kibitsu+Shrine+Okayama" target="_blank">📍 Google Maps</a></div></div>
+        <div class="tl-item"><div class="tl-left"><div class="tl-dot"></div><div class="tl-line"></div></div><div><div class="tl-time">下午</div><div class="tl-desc">ONSAYA COFFEE 奉還町本店</div><div class="tl-detail">自家烘焙・採買咖啡豆當伴手禮</div><a class="map-btn" href="https://maps.google.com/?q=ONSAYA+COFFEE+岡山" target="_blank">📍 Google Maps</a></div></div>
+        <div class="tl-item"><div class="tl-left"><div class="tl-dot"></div><div class="tl-line"></div></div><div><div class="tl-time">下午</div><div class="tl-desc">岡山工房 LIAISON 職人麵包</div></div></div>
+        <div class="tl-item"><div class="tl-left"><div class="tl-dot coral"></div></div><div><div class="tl-time">晚餐</div><div class="tl-desc">Vines 餐酒館</div><div class="tl-detail">自然酒 & 精緻料理・建議提前訂位<br><a href="https://www.instagram.com/vines.okayama/" target="_blank" style="color:var(--teal);">@vines.okayama</a></div></div></div>
+      </div>
+    </div></div>
+  </div>
+  <div class="day-panel" id="day-5">
+    <div class="card"><div class="card-header"><div class="card-icon">🛫</div><div><div class="card-title">5月18日（一）回程</div></div></div>
+    <div class="card-body"><div class="timeline">
+      <div class="tl-item"><div class="tl-left"><div class="tl-dot"></div><div class="tl-line"></div></div><div><div class="tl-time">10:00</div><div class="tl-desc">飯店退房（11:00前）</div><div class="tl-detail">可寄放行李於飯店前台後再出發</div></div></div>
+      <div class="tl-item"><div class="tl-left"><div class="tl-dot teal"></div><div class="tl-line"></div></div><div><div class="tl-time">11:00</div><div class="tl-desc">THE COFFEE BAR 早午餐</div><div class="tl-detail">招牌：庫克太太三明治 約¥1,200–1,500</div></div></div>
+      <div class="tl-item"><div class="tl-left"><div class="tl-dot"></div><div class="tl-line"></div></div><div><div class="tl-time">13:00</div><div class="tl-desc">岡山站附近最後採買</div><div class="tl-detail">Aeon Mall・BIC Camera・Don Quijote</div></div></div>
+      <div class="tl-item"><div class="tl-left"><div class="tl-dot amber"></div><div class="tl-line"></div></div><div><div class="tl-time">14:30–15:00</div><div class="tl-desc">岡山站西口搭機場巴士</div><div class="tl-detail">21號站牌・¥780/人・約30分</div></div></div>
+      <div class="tl-item"><div class="tl-left"><div class="tl-dot teal"></div></div><div><div class="tl-time">17:55</div><div class="tl-desc">虎航 IT263 起飛回高雄</div><div class="tl-detail">20:15 抵達高雄小港機場</div></div></div>
+    </div></div></div>
+  </div>
+</div>
+
+<!-- ══ WEATHER ══ -->
+<div class="page" id="page-weather">
+  <div class="card">
+    <div class="card-header"><div class="card-icon">🌤️</div><div><div class="card-title">5月旅程天氣預報</div><div class="card-sub">岡山均溫約18–27°C</div></div></div>
+    <div class="card-body">
+      <div class="weather-grid">
+        <div class="weather-card"><div class="weather-date">5/13 三</div><div class="weather-icon">⛅</div><div class="weather-temp">22–27°C</div><div class="weather-desc">多雲偶晴</div></div>
+        <div class="weather-card"><div class="weather-date">5/14 四</div><div class="weather-icon">☀️</div><div class="weather-temp">20–26°C</div><div class="weather-desc">晴朗舒適</div></div>
+        <div class="weather-card"><div class="weather-date">5/15 五</div><div class="weather-icon">⛅</div><div class="weather-temp">20–25°C</div><div class="weather-desc">微涼偶雲</div></div>
+        <div class="weather-card"><div class="weather-date">5/16 六</div><div class="weather-icon">🌤️</div><div class="weather-temp">21–26°C</div><div class="weather-desc">晴有薄雲</div></div>
+        <div class="weather-card"><div class="weather-date">5/17 日</div><div class="weather-icon">☀️</div><div class="weather-temp">20–27°C</div><div class="weather-desc">晴天之國</div></div>
+        <div class="weather-card"><div class="weather-date">5/18 一</div><div class="weather-icon">🌤️</div><div class="weather-temp">21–27°C</div><div class="weather-desc">晴轉多雲</div></div>
+      </div>
+      <div class="notice" style="margin-top:12px"><strong>穿衣建議：</strong>白天溫暖、早晚略涼，建議薄外套。記得帶薄雨衣備用。<br><a href="https://www.accuweather.com/zh/jp/okayama/226418/daily-weather-forecast/226418" target="_blank" style="color:var(--teal);">→ AccuWeather最新預報</a></div>
+    </div>
+  </div>
+</div>
+
+<!-- ══ ROUTE ══ -->
+<div class="page" id="page-route">
+  <div class="card" style="margin-bottom:12px">
+    <div class="card-header"><div class="card-icon">✈️</div><div><div class="card-title">機場 → 飯店（第1天）</div><div class="card-sub">總時間約 50–60 分鐘</div></div></div>
+    <div class="card-body">
+      <div style="background:var(--teal-light);border:1.5px solid rgba(13,148,136,.2);border-radius:10px;padding:12px 14px;margin-bottom:14px;"><div style="font-size:11px;font-weight:800;color:var(--teal-dark);margin-bottom:4px;">⏱ 總時間估算</div><div style="font-size:15px;font-weight:800;color:var(--teal);">機場到飯店約 50–60 分鐘</div></div>
+      <div class="step-box"><div class="step-num">1</div><div class="step-text"><strong>出岡山機場入境大廳</strong><br><small>右手邊即是巴士搭乘處，2號月台</small></div></div>
+      <div class="step-box"><div class="step-num">2</div><div class="step-text"><strong>購票：¥780/人</strong><br><small>月台旁自動售票機，有中文介面</small></div></div>
+      <div class="step-box"><div class="step-num">3</div><div class="step-text"><strong>搭乘機場巴士，約30分鐘</strong><br><small>終點「岡山站西口」</small></div></div>
+      <div class="step-box"><div class="step-num">4</div><div class="step-text"><strong>走地下街往「高島屋」方向</strong></div></div>
+      <div class="step-box"><div class="step-num">5</div><div class="step-text"><strong>出東口，步行5–10分鐘</strong><br><small>飯店在松本清藥妝樓上</small></div></div>
+      <a class="map-btn" href="https://www.google.com/maps/dir/Okayama+Momotaro+Airport/Okayama+Koraku+Hotel" target="_blank">📍 完整路線</a>
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-header"><div class="card-icon">🛫</div><div><div class="card-title">飯店 → 機場（最後一天）</div><div class="card-sub">班機 17:55，建議 14:30 搭巴士</div></div></div>
+    <div class="card-body">
+      <div class="step-box"><div class="step-num">1</div><div class="step-text"><strong>飯店退房（11:00前）</strong><br><small>大件行李可寄放前台</small></div></div>
+      <div class="step-box"><div class="step-num">2</div><div class="step-text"><strong>早午餐：THE COFFEE BAR</strong></div></div>
+      <div class="step-box"><div class="step-num">3</div><div class="step-text"><strong>前往岡山站西口巴士中心 21號站牌</strong></div></div>
+      <div class="step-box"><div class="step-num">4</div><div class="step-text"><strong>搭14:30–15:00 班次 ¥780/人</strong></div></div>
+      <div class="step-box"><div class="step-num">5</div><div class="step-text"><strong>機場辦理登機（15:30–16:30）</strong><br><small>先辦行李託運，再逛免稅店！</small></div></div>
+      <a class="map-btn" href="https://www.okayama-airport.org/tw/access/bus" target="_blank">🚌 機場巴士班次查詢</a>
+      <div class="notice"><strong>⚠️ 重要：</strong>在尾道買的酒類需放託運！</div>
+    </div>
+  </div>
+</div>
+
+<!-- ══ SHOP ══ -->
+<div class="page" id="page-shop">
+  <div class="card" style="margin-bottom:12px">
+    <div class="card-header"><div class="card-icon">📍</div><div><div class="card-title">行程順路採買提示</div></div></div>
+    <div class="card-body" style="padding-top:10px;padding-bottom:10px;">
+      <div style="margin-bottom:10px;"><div style="font-size:11px;font-weight:800;color:var(--teal-dark);margin-bottom:5px;">5/14（四）表町商店街下午</div><div style="font-size:13px;color:var(--text-mid);line-height:1.6;">岡山城步行5分可到表町・LOFT順路採買文具雜貨。</div></div>
+      <hr class="divider">
+      <div style="margin-bottom:10px;"><div style="font-size:11px;font-weight:800;color:var(--teal-dark);margin-bottom:5px;">5/16（六）倉敷下午</div><div style="font-size:13px;color:var(--text-mid);line-height:1.6;">AEON Mall 倉敷就在美觀地區附近，HOKA 跑鞋可在這裡找看看。</div></div>
+      <hr class="divider">
+      <div style="margin-bottom:10px;"><div style="font-size:11px;font-weight:800;color:var(--teal-dark);margin-bottom:5px;">5/17（日）奉還町下午</div><div style="font-size:13px;color:var(--text-mid);line-height:1.6;">ONSAYA COFFEE 就在奉還町商店街，The Market麵包、LIAISON都在附近，一起逛！</div></div>
+      <hr class="divider">
+      <div><div style="font-size:11px;font-weight:800;color:var(--teal-dark);margin-bottom:5px;">5/18（一）最後採買</div><div style="font-size:13px;color:var(--text-mid);line-height:1.6;">退房 → THE COFFEE BAR早午餐 → Aeon Mall → 木村屋麵包 → 搭巴士。</div></div>
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-header"><div class="card-icon">🛍️</div><div><div class="card-title">岡山逛街指南</div></div></div>
+    <div class="card-body">
+      <div class="shop-category">
+        <div class="shop-cat-title">🏬 商場 & 商店街</div>
+        <div class="shop-item"><div class="shop-item-header"><div class="shop-item-icon">🏛️</div><div><div class="shop-item-name">表町商店街</div></div></div><div class="nearby-tag">📅 5/14 岡山城下午順路</div><div class="shop-item-desc">岡山最大拱廊式商店街。</div><a class="map-btn" href="https://maps.google.com/?q=Omote-machi+Shopping+Street+Okayama" target="_blank">📍 Google Maps</a></div>
+        <div class="shop-item"><div class="shop-item-header"><div class="shop-item-icon">🌃</div><div><div class="shop-item-name">奉還町商店街</div></div></div><div class="nearby-tag">📅 5/17 下午 & 5/18 退房後順路</div><div class="shop-item-desc">充滿懷舊庶民氣息，ONSAYA COFFEE、The Market麵包都在此。</div><a class="map-btn" href="https://maps.google.com/?q=奉還町商店街+岡山" target="_blank">📍 Google Maps</a></div>
+        <div class="shop-item"><div class="shop-item-header"><div class="shop-item-icon">🏢</div><div><div class="shop-item-name">LOFT 岡山店</div></div></div><div class="nearby-tag">📅 5/14 表町下午可順路</div><div class="shop-item-desc">日系文具、化妝品、創意生活雜貨。</div></div>
+        <div class="shop-item"><div class="shop-item-header"><div class="shop-item-icon">🏪</div><div><div class="shop-item-name">AEON Mall 岡山（車站旁）</div></div></div><div class="nearby-tag">📅 5/18 最後採買</div><div class="shop-item-desc">西日本最大商場之一，與車站地下街相連。</div><a class="map-btn" href="https://maps.google.com/?q=AEON+Mall+岡山" target="_blank">📍 Google Maps</a></div>
+      </div>
+      <div class="shop-category">
+        <div class="shop-cat-title">🥖 職人麵包</div>
+        <div class="shop-item"><div class="shop-item-header"><div class="shop-item-icon">🍞</div><div><div class="shop-item-name">岡山工房 LIAISON</div></div></div><div class="nearby-tag">📅 5/17 下午行程</div><div class="shop-item-desc">無添加手作，推薦鹽麵包與咖哩麵包。</div></div>
+        <div class="shop-item"><div class="shop-item-header"><div class="shop-item-icon">🍌</div><div><div class="shop-item-name">岡山木村屋（Kimuraya）</div></div></div><div class="nearby-tag">📅 5/18 最後採買順路</div><div class="shop-item-desc">在地老字號，必吃「香蕉奶油麵包捲」。</div></div>
+        <div class="shop-item"><div class="shop-item-header"><div class="shop-item-icon">🫓</div><div><div class="shop-item-name">The Market（奉還町）</div></div></div><div class="nearby-tag">📅 5/17 奉還町順路</div><div class="shop-item-desc">天然酵母與歐式硬麵包。</div></div>
+      </div>
+      <div class="shop-category">
+        <div class="shop-cat-title">☕ 咖啡豆採購</div>
+        <div class="shop-item"><div class="shop-item-header"><div class="shop-item-icon">☕</div><div><div class="shop-item-name">ONSAYA COFFEE 奉還町本店</div></div></div><div class="nearby-tag">📅 5/17 下午行程</div><div class="shop-item-desc">自家烘焙，多款高品質單品豆，包裝精緻好帶。</div><a class="map-btn" href="https://maps.google.com/?q=ONSAYA+COFFEE+岡山" target="_blank">📍 Google Maps</a></div>
+        <div class="shop-item"><div class="shop-item-header"><div class="shop-item-icon">🫘</div><div><div class="shop-item-name">THE COFFEE BAR（岡山站西口）</div></div></div><div class="nearby-tag">📅 5/18 早午餐就在這！</div><div class="shop-item-desc">豆子品質極佳且包裝精緻。最後一天早午餐後可帶幾包回台。</div></div>
+      </div>
+      <div class="shop-category">
+        <div class="shop-cat-title">🍜 精選美食</div>
+        <div class="shop-item"><div class="shop-item-header"><div class="shop-item-icon">🍚</div><div><div class="shop-item-name">味司 野村</div></div></div><div class="shop-item-desc">必吃「多米醬豬排蓋飯」，岡山在地名物。</div><a class="map-btn" href="https://maps.google.com/?q=味司野村+岡山" target="_blank">📍 Google Maps</a></div>
+        <div class="shop-item"><div class="shop-item-header"><div class="shop-item-icon">🍜</div><div><div class="shop-item-name">小豆島拉麵 HISHIO</div></div></div><div class="shop-item-desc">使用小豆島醬油，濃郁鹹香。</div><a class="map-btn" href="https://maps.google.com/?q=小豆島ラーメンHISHIO+岡山" target="_blank">📍 Google Maps</a></div>
+      </div>
+      <div class="shop-category">
+        <div class="shop-cat-title">👟 HOKA 跑鞋</div>
+        <div class="shop-item"><div class="shop-item-header"><div class="shop-item-icon">👟</div><div><div class="shop-item-name">Mega Sports（AEON Mall 岡山 4F）</div></div></div><div class="nearby-tag">📅 5/18 最後採買</div><div class="shop-item-desc">岡山最便利的大型運動用品店。</div></div>
+        <div class="shop-item"><div class="shop-item-header"><div class="shop-item-icon">🏪</div><div><div class="shop-item-name">Mega Sports（AEON Mall 倉敷）</div></div></div><div class="nearby-tag">📅 5/16 倉敷美觀地區附近</div><div class="shop-item-desc">倉敷當地大型運動用品店。</div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- WISH LIST -->
+  <div class="wish-wrap">
+    <div class="wish-header">
+      <div><h3>⭐ 我的願望清單</h3><p id="wish-status">讀取中...</p></div>
+      <button class="wish-add-fab" onclick="openWishModal(null)">＋</button>
+    </div>
+    <div class="wish-filter-bar" id="wish-filter-bar">
+      <button class="wish-filter-btn active" onclick="setWishFilter('全部')">全部</button>
+    </div>
+    <div class="wish-list-wrap" id="wish-list-body"><div class="wish-empty">載入中...</div></div>
+    <div class="wish-bottom-bar">
+      <span class="wish-bottom-txt">💾 備份碼可傳給姊姊同步</span>
+      <button class="wish-bottom-btn outline" onclick="wishExportPrompt()">備份碼</button>
+      <button class="wish-bottom-btn solid" onclick="toggleWishImport()">匯入</button>
+    </div>
+  </div>
+  <div class="import-strip" id="wish-import-strip" style="display:none;">
+    <div class="form-label" style="margin-bottom:6px;">貼入備份碼（WISHLIST2026:…）</div>
+    <textarea id="wish-import-text" class="form-input" style="height:80px;font-size:11px;resize:none;" placeholder="貼上備份碼…"></textarea>
+    <div style="display:flex;gap:8px;margin-top:8px;">
+      <button class="modal-cancel" style="flex:1;padding:10px;" onclick="toggleWishImport()">取消</button>
+      <button class="modal-submit" style="flex:2;padding:10px;" onclick="wishImport()">✅ 確認匯入</button>
+    </div>
+  </div>
+</div>
+
+<!-- ══ FX（匯率）── -->
+<div class="page" id="page-fx">
+  <!-- 即時匯率主卡，開啟即自動載入 -->
+  <div class="fx-live-hero" id="fx-hero">
+    <div class="fx-live-label">即時匯率 · 台灣銀行參考</div>
+    <div id="fx-loading-state">
+      <div style="color:rgba(255,255,255,.7);font-size:14px;padding:12px 0;"><span class="fx-loading-ring"></span>取得最新匯率中...</div>
+    </div>
+    <div id="fx-rate-state" style="display:none;">
+      <div class="fx-live-rate-big" id="fx-live-rate-big">—</div>
+      <div class="fx-live-unit">NT$ / ¥100 日圓</div>
+      <div class="fx-live-updated" id="fx-live-updated"></div>
+    </div>
+    <div id="fx-error-state" style="display:none;color:rgba(255,255,255,.65);font-size:13px;padding:8px 0;"></div>
+    <button class="fx-refresh-btn" style="margin-top:14px;" onclick="fetchLiveRate()">🔄 重新整理</button>
+  </div>
+
+  <div class="card" style="margin-bottom:12px">
+    <div class="card-header"><div class="card-icon">🧮</div><div><div class="card-title">換算計算機</div><div class="card-sub">輸入日圓，立即換算台幣</div></div></div>
+    <div class="card-body">
+      <div class="fx-display">
+        <div class="fx-display-label">日圓金額</div>
+        <div class="fx-display-jpy" id="fx-jpy-display">¥ 0</div>
+        <div class="fx-display-twd" id="fx-twd-display">= NT$ 0</div>
+        <div class="fx-display-note" id="fx-rate-used">匯率載入中...</div>
+      </div>
+      <div class="fx-numpad">
+        <button class="fx-key" onclick="fxKey('7')">7</button><button class="fx-key" onclick="fxKey('8')">8</button><button class="fx-key" onclick="fxKey('9')">9</button>
+        <button class="fx-key" onclick="fxKey('4')">4</button><button class="fx-key" onclick="fxKey('5')">5</button><button class="fx-key" onclick="fxKey('6')">6</button>
+        <button class="fx-key" onclick="fxKey('1')">1</button><button class="fx-key" onclick="fxKey('2')">2</button><button class="fx-key" onclick="fxKey('3')">3</button>
+        <button class="fx-key zero" onclick="fxKey('0')">0</button><button class="fx-key del" onclick="fxDel()">⌫</button>
+      </div>
+      <div style="display:flex;gap:8px;margin-top:4px;">
+        <button class="add-btn" onclick="fxSaveToHistory()" style="flex:2;margin-bottom:0;">📌 記下換算</button>
+        <button onclick="fxInput='';fxCalc();" style="flex:1;padding:13px;background:var(--coral-light);color:var(--coral);border:1.5px solid rgba(239,68,68,.25);border-radius:12px;font-size:14px;font-weight:800;font-family:var(--font);cursor:pointer;">清除</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-header">
+      <div class="card-icon">📋</div>
+      <div style="flex:1"><div class="card-title">換算紀錄</div></div>
+      <button onclick="fxClearHistory()" style="background:none;border:none;font-size:12px;color:var(--text-muted);cursor:pointer;padding:4px 8px;">清除</button>
+    </div>
+    <div class="card-body" id="fx-history-body"><div style="text-align:center;color:var(--text-muted);font-size:13px;padding:20px 0;">還沒有換算紀錄</div></div>
+  </div>
+</div>
+
+<!-- ══ EXPENSE ══ -->
+<div class="page" id="page-expense">
+  <div style="border-radius:var(--radius);overflow:hidden;box-shadow:var(--shadow);margin-bottom:12px;border:1.5px solid var(--border);">
+    <div class="exp-header"><h2>💴 旅遊記帳本</h2><p>An ＆ 姊姊 · 岡山之旅 2026</p></div>
+    <div class="summary-strip">
+      <div class="sum-col"><div class="sum-label">總花費</div><div class="sum-val" id="total-all">¥0</div></div>
+      <div class="sum-col"><div class="sum-label">An 負擔</div><div class="sum-val you" id="total-you">¥0</div></div>
+      <div class="sum-col"><div class="sum-label">姊姊 負擔</div><div class="sum-val sis" id="total-sis">¥0</div></div>
+    </div>
+    <div class="exp-tabs-bar">
+      <button class="exp-tab active" onclick="showExpTab('add')">＋ 新增</button>
+      <button class="exp-tab" onclick="showExpTab('list')">明細</button>
+      <button class="exp-tab" onclick="showExpTab('stats')">統計</button>
+      <button class="exp-tab" onclick="showExpTab('sync')">☁️ 備份</button>
+    </div>
+    <div class="exp-panel active" id="exp-add">
+      <div class="exp-form">
+        <div class="form-row"><label class="form-label">購買項目</label><input class="form-input" id="inp-name" type="text" placeholder="例：千光寺纜車票、拉麵兩份…"></div>
+        <div class="form-row-2col">
+          <div class="form-row"><label class="form-label">金額（¥）</label><input class="form-input" id="inp-amount" type="number" placeholder="0" inputmode="numeric"></div>
+          <div class="form-row"><label class="form-label">日期</label><input class="form-input" id="inp-date" type="date"></div>
+        </div>
+        <div class="form-row"><label class="form-label">誰付款</label><div class="toggle-group"><button class="toggle-btn teal-active" id="payer-you" onclick="setPayer('you')">An 付</button><button class="toggle-btn" id="payer-sis" onclick="setPayer('sis')">姊姊 付</button></div></div>
+        <div class="form-row"><label class="form-label">費用分攤</label><div class="toggle-group"><button class="toggle-btn teal-active" id="split-half" onclick="setSplit('half')">均分</button><button class="toggle-btn" id="split-you" onclick="setSplit('you')">An獨付</button><button class="toggle-btn" id="split-sis" onclick="setSplit('sis')">姊姊獨付</button></div></div>
+        <div class="form-row"><label class="form-label">付款方式</label><div class="toggle-group"><button class="toggle-btn teal-active" id="method-cash" onclick="setMethod('cash')">💴 現金</button><button class="toggle-btn" id="method-paypay" onclick="setMethod('paypay')">📱 PayPay</button><button class="toggle-btn" id="method-card" onclick="setMethod('card')">💳 信用卡</button></div></div>
+        <button class="add-btn" onclick="addExpense()">記下這筆 →</button>
+      </div>
+    </div>
+    <div class="exp-panel" id="exp-list"><div class="exp-list-wrap" id="exp-list-body"><div class="exp-empty">還沒有記帳記錄</div></div></div>
+    <div class="exp-panel" id="exp-stats">
+      <div style="background:var(--card);padding:16px;">
+        <div class="form-label" style="margin-bottom:10px;">付款方式分布</div>
+        <div class="stats-grid" style="margin-bottom:14px;">
+          <div class="stat-box teal" style="flex:1;"><div style="font-size:18px;">💴</div><div style="font-size:10px;font-weight:700;color:var(--text-muted);margin-top:3px;">現金</div><div style="font-size:15px;font-weight:800;color:var(--teal);margin-top:3px;" id="stat-cash">¥0</div></div>
+          <div class="stat-box teal" style="flex:1;"><div style="font-size:18px;">📱</div><div style="font-size:10px;font-weight:700;color:var(--text-muted);margin-top:3px;">PayPay</div><div style="font-size:15px;font-weight:800;color:var(--teal);margin-top:3px;" id="stat-paypay">¥0</div></div>
+          <div class="stat-box teal" style="flex:1;"><div style="font-size:18px;">💳</div><div style="font-size:10px;font-weight:700;color:var(--text-muted);margin-top:3px;">信用卡</div><div style="font-size:15px;font-weight:800;color:var(--teal);margin-top:3px;" id="stat-card">¥0</div></div>
+        </div>
+        <hr class="divider">
+        <div class="form-label" style="margin-bottom:10px;">個人負擔詳情</div>
+        <div style="display:flex;gap:8px;margin-bottom:14px;">
+          <div class="stat-box teal" style="flex:1;padding:14px;"><div style="font-size:12px;font-weight:800;color:var(--teal-dark);margin-bottom:6px;">An</div><div style="font-size:22px;font-weight:900;color:var(--teal);" id="stat-you-big">¥0</div><div style="font-size:11px;color:var(--text-muted);margin-top:6px;" id="stat-you-note">尚無記錄</div></div>
+          <div class="stat-box purple" style="flex:1;padding:14px;"><div style="font-size:12px;font-weight:800;color:var(--indigo);margin-bottom:6px;">姊姊</div><div style="font-size:22px;font-weight:900;color:var(--indigo);" id="stat-sis-big">¥0</div><div style="font-size:11px;color:var(--text-muted);margin-top:6px;" id="stat-sis-note">尚無記錄</div></div>
+        </div>
+        <hr class="divider">
+        <div class="form-label" style="margin-bottom:8px;">結算建議</div>
+        <div class="settle-box" id="settle-msg">還沒有記帳記錄 😊</div>
+      </div>
+    </div>
+    <div class="exp-panel" id="exp-sync">
+      <div style="background:var(--card);padding:16px;">
+        <div class="form-label" style="margin-bottom:8px;">☁️ GitHub Gist 雲端備份</div>
+        <div class="gist-box">
+          <div id="gist-status-badge" class="gist-status disconnected">⚪ 未連線</div>
+          <div style="font-size:12.5px;color:var(--text-mid);line-height:1.6;margin-bottom:10px;">備份到你自己的 GitHub Gist（私人）。</div>
+          <div id="gist-token-section">
+            <div class="form-label" style="margin-bottom:6px;">貼入 GitHub Personal Access Token</div>
+            <div class="gist-token-row"><input class="form-input" id="gist-token-input" type="password" placeholder="ghp_xxxxxxxxxxxx" style="flex:1;font-size:13px;"><button class="gist-btn primary" onclick="gistConnect()">連線</button></div>
+          </div>
+          <div id="gist-connected-section" style="display:none;">
+            <div style="font-size:12px;color:var(--text-muted);margin-bottom:10px;">Gist ID: <span id="gist-id-display" style="font-weight:700;color:var(--teal);font-size:11px;word-break:break-all;"></span></div>
+            <button class="gist-btn primary" onclick="gistPush()">📤 上傳備份</button>
+            <button class="gist-btn secondary" onclick="gistPull()">📥 下載還原</button>
+            <button class="gist-btn danger" onclick="gistDisconnect()">斷開連線</button>
+          </div>
+          <div id="gist-log" style="font-size:11.5px;color:var(--text-muted);margin-top:8px;"></div>
+        </div>
+        <hr class="divider">
+        <div class="form-label" style="margin-bottom:8px;">💾 本機備份碼</div>
+        <div style="background:var(--card2);border:1px solid var(--border);border-radius:10px;padding:12px 14px;margin-bottom:10px;font-size:13px;color:var(--text);">共 <strong id="backup-count" style="color:var(--teal);">0</strong> 筆記錄・最後更新：<span id="backup-time" style="color:var(--text-muted);">—</span></div>
+        <button class="export-btn" onclick="exportBackup()">📤 產生備份碼</button>
+        <button class="export-btn outline" onclick="showImportBox()">📥 匯入還原</button>
+        <div id="backup-output" style="display:none;margin-top:12px;">
+          <div class="form-label" style="margin-bottom:6px;">備份碼（請全選複製）</div>
+          <textarea id="backup-text" class="form-input" style="height:100px;font-size:11px;resize:none;" readonly onclick="this.select()"></textarea>
+        </div>
+        <div id="import-box" style="display:none;margin-top:14px;">
+          <div class="form-label" style="margin-bottom:6px;">貼入備份碼</div>
+          <textarea id="import-text" class="form-input" style="height:100px;font-size:11px;resize:none;" placeholder="把備份碼貼在這裡…"></textarea>
+          <button class="export-btn" style="margin-top:8px;" onclick="importBackup()">✅ 確認匯入還原</button>
+        </div>
+        <hr class="divider">
+        <button class="export-btn" style="background:var(--coral-light);color:var(--coral);border:1px solid rgba(239,68,68,.25);" onclick="clearAll()">🗑️ 清除所有記錄</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="sync-indicator" id="sync-indicator">⟳ 同步中...</div>
+<div class="footer-note">✦ 岡山 · 尾道 · 倉敷 · 2026 ✦</div>
+
+<!-- WISH MODAL -->
+<div class="modal-overlay" id="wish-modal" onclick="if(event.target===this)closeWishModal()">
+  <div class="modal-sheet">
+    <div class="modal-handle"></div>
+    <div class="modal-title" id="wm-title">＋ 新增願望地點</div>
+    <div class="modal-body">
+      <div class="form-row"><label class="form-label">地點名稱 *</label><input class="form-input" id="wm-name" type="text" placeholder="例：ONSAYA COFFEE、千光寺纜車…"></div>
+      <div class="form-row"><label class="form-label">分類</label><div class="cat-chips" id="wm-cat-chips"></div>
+        <div class="new-cat-row" style="margin-top:8px;"><input class="form-input new-cat-input" id="wm-new-cat" type="text" placeholder="＋ 自建新分類"><button class="new-cat-btn" onclick="addCustomCat()">新增</button></div>
+      </div>
+      <div class="form-row"><label class="form-label">地址（選填）</label><input class="form-input" id="wm-addr" type="text" placeholder="例：岡山市北区奉還町…"></div>
+      <div class="form-row"><label class="form-label">備註（選填）</label><input class="form-input" id="wm-note" type="text" placeholder="例：必吃招牌、僅週末營業…"></div>
+      <div class="form-row"><label class="form-label">Google Maps 連結（選填）</label><input class="form-input" id="wm-map" type="url" placeholder="https://maps.google.com/…"></div>
+      <div class="modal-actions">
+        <button class="modal-cancel" onclick="closeWishModal()">取消</button>
+        <button class="modal-submit" id="wm-save-btn" onclick="saveWish()">儲存地點 →</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+/* ══ IndexedDB ══ */
+var DB_NAME='OkayamaTrip2026',DB_VERSION=1,db=null;
+function openDB(){return new Promise(function(res,rej){if(db){res(db);return;}var req=indexedDB.open(DB_NAME,DB_VERSION);req.onupgradeneeded=function(e){var d=e.target.result;if(!d.objectStoreNames.contains('wishes'))d.createObjectStore('wishes',{keyPath:'id'});if(!d.objectStoreNames.contains('expenses'))d.createObjectStore('expenses',{keyPath:'id'});if(!d.objectStoreNames.contains('meta'))d.createObjectStore('meta',{keyPath:'key'});};req.onsuccess=function(e){db=e.target.result;res(db);};req.onerror=function(){rej(req.error);};});}
+function dbGetAll(store){return openDB().then(function(d){return new Promise(function(res,rej){var tx=d.transaction(store,'readonly');var req=tx.objectStore(store).getAll();req.onsuccess=function(){res(req.result||[]);};req.onerror=function(){rej(req.error);};});});}
+function dbPutAll(store,items){return openDB().then(function(d){return new Promise(function(res,rej){var tx=d.transaction(store,'readwrite');var os=tx.objectStore(store);os.clear();items.forEach(function(item){os.put(item);});tx.oncomplete=res;tx.onerror=function(){rej(tx.error);};});});}
+function dbPutMeta(key,value){return openDB().then(function(d){return new Promise(function(res){var tx=d.transaction('meta','readwrite');tx.objectStore('meta').put({key:key,value:value});tx.oncomplete=res;});});}
+function dbGetMeta(key){return openDB().then(function(d){return new Promise(function(res){var tx=d.transaction('meta','readonly');var req=tx.objectStore('meta').get(key);req.onsuccess=function(){res(req.result?req.result.value:null);};req.onerror=function(){res(null);};});});}
+
+/* ══ NAV ══ */
+function showPage(id){document.querySelectorAll('.page').forEach(function(p){p.classList.remove('active');});document.querySelectorAll('.nav-btn').forEach(function(b){b.classList.remove('active');});document.getElementById('page-'+id).classList.add('active');document.getElementById('nav-'+id).classList.add('active');window.scrollTo(0,0);if(id==='expense')renderSync();}
+function showDay(idx){document.querySelectorAll('.day-panel').forEach(function(p,i){p.classList.toggle('active',i===idx);});document.querySelectorAll('.day-tab').forEach(function(t,i){t.classList.toggle('active',i===idx);});}
+
+/* ══ PWA ══ */
+function dismissPwaBanner(){document.getElementById('pwa-install-banner').style.display='none';localStorage.setItem('pwa-dismissed','1');}
+
+/* ══ SPLASH ══ */
+window.addEventListener('load',function(){
+  if(!localStorage.getItem('pwa-dismissed')&&!window.matchMedia('(display-mode: standalone)').matches){document.getElementById('pwa-install-banner').style.display='block';}
+  setTimeout(function(){var s=document.getElementById('splash');if(s){s.classList.add('hide');setTimeout(function(){s.remove();},700);}},2000);
+  /* 頁面載入即取匯率 */
+  fetchLiveRate();
+});
+
+/* ══ FX ══ */
+var fxInput='',fxHistory=[],fxLiveRate=0,fxRateDate='';
+dbGetMeta('fx_history').then(function(h){if(h)fxHistory=h;renderFxHistory();});
+dbGetMeta('fx_live_rate').then(function(r){
+  if(r&&r.rate){
+    fxLiveRate=r.rate; fxRateDate=r.date;
+    showFxRateState(r.rate,r.date,'（上次快取）');
+    fxCalc();
+  }
+});
+
+function fetchLiveRate(){
+  var loadEl=document.getElementById('fx-loading-state');
+  var rateEl=document.getElementById('fx-rate-state');
+  var errEl=document.getElementById('fx-error-state');
+  if(loadEl)loadEl.style.display='block';
+  if(rateEl)rateEl.style.display='none';
+  if(errEl)errEl.style.display='none';
+
+  /* 同時嘗試多個來源 */
+  var apis=[
+    /* frankfurter — JPY→TWD */
+    fetch('https://api.frankfurter.app/latest?from=JPY&to=TWD',{signal:AbortSignal.timeout(7000)})
+      .then(function(r){return r.json();})
+      .then(function(d){return {rate:d.rates.TWD,date:d.date,src:'Frankfurter'};})
+  ];
+
+  Promise.any(apis).then(function(result){
+    fxLiveRate=result.rate;
+    fxRateDate=result.date;
+    dbPutMeta('fx_live_rate',{rate:fxLiveRate,date:fxRateDate});
+    showFxRateState(fxLiveRate,fxRateDate,'已更新 · '+result.src);
+    fxCalc();
+    var u=document.getElementById('fx-rate-used');
+    if(u)u.textContent='¥1 = NT$ '+fxLiveRate.toFixed(4)+' · 已更新';
+  }).catch(function(){
+    if(loadEl)loadEl.style.display='none';
+    if(errEl){
+      errEl.style.display='block';
+      errEl.textContent=fxLiveRate>0?'網路連線失敗，使用上次快取匯率':'無法取得匯率，請確認網路連線';
+    }
+    if(fxLiveRate>0){
+      showFxRateState(fxLiveRate,fxRateDate,'快取中（離線）');
+    }
+  });
+}
+
+function showFxRateState(rate,date,note){
+  var loadEl=document.getElementById('fx-loading-state');
+  var rateEl=document.getElementById('fx-rate-state');
+  var bigEl=document.getElementById('fx-live-rate-big');
+  var updEl=document.getElementById('fx-live-updated');
+  if(loadEl)loadEl.style.display='none';
+  if(rateEl)rateEl.style.display='block';
+  if(bigEl)bigEl.textContent='NT$ '+(rate*100).toFixed(2);
+  if(updEl)updEl.textContent=date+' · '+note;
+}
+
+function fxKey(k){if(fxInput.length>=9)return;if(k!=='.'&&fxInput==='0')fxInput=k;else fxInput+=k;fxCalc();}
+function fxDel(){fxInput=fxInput.slice(0,-1);fxCalc();}
+function fxCalc(){
+  var jpy=parseFloat(fxInput)||0;
+  var twd=jpy*fxLiveRate;
+  var je=document.getElementById('fx-jpy-display');
+  var te=document.getElementById('fx-twd-display');
+  var u=document.getElementById('fx-rate-used');
+  if(je)je.textContent='¥ '+(fxInput||'0');
+  if(te)te.textContent='= NT$ '+twd.toFixed(1);
+  if(u)u.textContent=fxLiveRate>0?'¥1 = NT$ '+fxLiveRate.toFixed(4):'匯率載入中...';
+}
+function fxSaveToHistory(){
+  var jpy=parseFloat(fxInput)||0;
+  if(!jpy){alert('請先輸入金額');return;}
+  var twd=jpy*fxLiveRate,now=new Date();
+  fxHistory.unshift({jpy:jpy,twd:twd,rate:fxLiveRate,day:(now.getMonth()+1)+'/'+(now.getDate()),time:now.toLocaleTimeString('zh-TW',{hour:'2-digit',minute:'2-digit'})});
+  if(fxHistory.length>20)fxHistory.pop();
+  dbPutMeta('fx_history',fxHistory);
+  fxInput='';fxCalc();renderFxHistory();showSyncIndicator('已記下 ✓');
+}
+function fxClearHistory(){if(!fxHistory.length)return;if(!confirm('清除所有換算紀錄？'))return;fxHistory=[];dbPutMeta('fx_history',[]);renderFxHistory();}
+function renderFxHistory(){
+  var body=document.getElementById('fx-history-body');
+  if(!body)return;
+  if(!fxHistory.length){body.innerHTML='<div style="text-align:center;color:var(--text-muted);font-size:13px;padding:20px 0;">還沒有換算紀錄</div>';return;}
+  body.innerHTML=fxHistory.map(function(h){
+    return '<div class="fx-hist-item"><div><div class="fx-hist-jpy">¥'+h.jpy.toLocaleString()+'</div><div class="fx-hist-rate">'+h.day+' '+h.time+' · ¥1=NT$'+h.rate.toFixed(4)+'</div></div><div class="fx-hist-twd">NT$ '+h.twd.toFixed(1)+'</div></div>';
+  }).join('');
+}
+
+/* ══ EXPENSE ══ */
+var expenses=[],curPayer='you',curSplit='half',curMethod='cash';
+dbGetAll('expenses').then(function(items){expenses=items.sort(function(a,b){return b.id-a.id;});updateSummary();});
+(function(){var d=document.getElementById('inp-date');var ts=new Date('2026-05-13'),te=new Date('2026-05-18');var t=new Date();var use=(t>=ts&&t<=te)?t:ts;d.value=use.toISOString().slice(0,10);})();
+function showExpTab(tab){['add','list','stats','sync'].forEach(function(n,i){document.querySelectorAll('.exp-tab')[i].classList.toggle('active',n===tab);});document.querySelectorAll('.exp-panel').forEach(function(p){p.classList.remove('active');});document.getElementById('exp-'+tab).classList.add('active');if(tab==='list')renderExpList();if(tab==='stats')renderStats();if(tab==='sync')renderSync();}
+function setPayer(p){curPayer=p;document.getElementById('payer-you').className='toggle-btn'+(p==='you'?' teal-active':'');document.getElementById('payer-sis').className='toggle-btn'+(p==='sis'?' amber-active':'');}
+function setSplit(s){curSplit=s;['half','you','sis'].forEach(function(v){var el=document.getElementById('split-'+v);if(el)el.className='toggle-btn'+(v===s?' teal-active':'');});}
+function setMethod(m){curMethod=m;['cash','paypay','card'].forEach(function(v){var el=document.getElementById('method-'+v);if(el)el.className='toggle-btn'+(v===m?' indigo-active':'');});}
+function fmt(n){return '¥'+Math.round(n).toLocaleString();}
+function calcShare(a,p,s){if(s==='half')return{you:a/2,sis:a/2};if(s==='you')return{you:a,sis:0};return{you:0,sis:a};}
+function addExpense(){
+  var name=document.getElementById('inp-name').value.trim();
+  var amount=parseFloat(document.getElementById('inp-amount').value);
+  var date=document.getElementById('inp-date').value;
+  if(!name){alert('請輸入購買項目');return;}
+  if(!amount||amount<=0){alert('請輸入正確金額');return;}
+  if(!date){alert('請選擇日期');return;}
+  var item={id:Date.now(),name:name,amount:amount,date:date,payer:curPayer,split:curSplit,method:curMethod};
+  expenses.unshift(item);
+  dbPutAll('expenses',expenses).then(function(){dbPutMeta('exp_updated',new Date().toLocaleString('zh-TW'));});
+  updateSummary();
+  document.getElementById('inp-name').value='';
+  document.getElementById('inp-amount').value='';
+  var btn=document.querySelector('.add-btn');
+  btn.textContent='已記下 ✓';
+  btn.style.background='#059669';
+  setTimeout(function(){btn.textContent='記下這筆 →';btn.style.background='';},1300);
+}
+function deleteExp(id){if(!confirm('確定刪除？'))return;expenses=expenses.filter(function(e){return e.id!==id;});dbPutAll('expenses',expenses);renderExpList();updateSummary();}
+var DAY_LABELS={'2026-05-13':'5/13（三）','2026-05-14':'5/14（四）','2026-05-15':'5/15（五）','2026-05-16':'5/16（六）','2026-05-17':'5/17（日）','2026-05-18':'5/18（一）'};
+var METHOD_LABELS={cash:'現金',paypay:'PayPay',card:'信用卡'};
+var SPLIT_LABELS={half:'均分',you:'An獨付',sis:'姊姊獨付'};
+var PAYER_LABELS={you:'An',sis:'姊姊'};
+function renderExpList(){var body=document.getElementById('exp-list-body');if(!expenses.length){body.innerHTML='<div class="exp-empty">還沒有記帳記錄</div>';return;}var html='',lastDate='';expenses.forEach(function(e){var s=calcShare(e.amount,e.payer,e.split);if(e.date!==lastDate){html+='<div class="date-group-header">'+(DAY_LABELS[e.date]||e.date)+'</div>';lastDate=e.date;}var dotC=e.split==='you'?'you':(e.split==='sis'?'sis':'both');var bdgC=e.method==='cash'?'cash':(e.method==='paypay'?'paypay':'card');html+='<div class="exp-item"><div class="exp-dot '+dotC+'"></div><div class="exp-main"><div class="exp-item-name">'+e.name+'<span class="exp-mbadge '+bdgC+'">'+METHOD_LABELS[e.method]+'</span></div><div class="exp-meta">由 '+PAYER_LABELS[e.payer]+' 付・'+SPLIT_LABELS[e.split]+'</div></div><div class="exp-right"><div class="exp-amount">'+fmt(e.amount)+'</div><div class="exp-split-detail">An '+fmt(s.you)+'<br>姊 '+fmt(s.sis)+'</div></div><button class="exp-del" onclick="deleteExp('+e.id+')">✕</button></div>';});body.innerHTML=html;}
+function updateSummary(){var all=0,you=0,sis=0;expenses.forEach(function(e){var s=calcShare(e.amount,e.payer,e.split);all+=e.amount;you+=s.you;sis+=s.sis;});document.getElementById('total-all').textContent=fmt(all);document.getElementById('total-you').textContent=fmt(you);document.getElementById('total-sis').textContent=fmt(sis);}
+function renderStats(){var all=0,you=0,sis=0,paidYou=0,paidSis=0,mt={cash:0,paypay:0,card:0};expenses.forEach(function(e){var s=calcShare(e.amount,e.payer,e.split);all+=e.amount;you+=s.you;sis+=s.sis;if(e.payer==='you')paidYou+=e.amount;else paidSis+=e.amount;mt[e.method]+=e.amount;});document.getElementById('stat-cash').textContent=fmt(mt.cash);document.getElementById('stat-paypay').textContent=fmt(mt.paypay);document.getElementById('stat-card').textContent=fmt(mt.card);document.getElementById('stat-you-big').textContent=fmt(you);document.getElementById('stat-sis-big').textContent=fmt(sis);var yp=all>0?Math.round(you/all*100):0,sp=all>0?Math.round(sis/all*100):0;document.getElementById('stat-you-note').textContent='佔總花費 '+yp+'%，付出 '+fmt(paidYou);document.getElementById('stat-sis-note').textContent='佔總花費 '+sp+'%，付出 '+fmt(paidSis);var diff=paidYou-you,msg='';if(!expenses.length)msg='還沒有記帳記錄，記帳後這裡會自動計算 😊';else if(Math.abs(diff)<1)msg='✅ 兩人花費完全平衡，不需要互相轉帳！';else if(diff>0)msg='📌 姊姊應還 An <strong>'+fmt(diff)+'</strong>';else msg='📌 An 應還姊姊 <strong>'+fmt(-diff)+'</strong>';document.getElementById('settle-msg').innerHTML=msg;}
+function renderSync(){document.getElementById('backup-count').textContent=expenses.length;dbGetMeta('exp_updated').then(function(t){document.getElementById('backup-time').textContent=t||'—';});}
+function exportBackup(){var code='OKAYAMA2026:'+btoa(unescape(encodeURIComponent(JSON.stringify(expenses))));document.getElementById('backup-output').style.display='block';document.getElementById('backup-text').value=code;}
+function showImportBox(){document.getElementById('import-box').style.display='block';}
+function importBackup(){var raw=document.getElementById('import-text').value.trim();if(!raw.startsWith('OKAYAMA2026:')){alert('備份碼格式不正確');return;}try{var decoded=JSON.parse(decodeURIComponent(escape(atob(raw.slice(12)))));if(!Array.isArray(decoded))throw new Error();if(!confirm('確認匯入 '+decoded.length+' 筆記錄？'))return;expenses=decoded;dbPutAll('expenses',expenses).then(function(){dbPutMeta('exp_updated',new Date().toLocaleString('zh-TW'));});updateSummary();renderSync();alert('✅ 匯入成功！');}catch(e){alert('備份碼解析失敗。');}}
+function clearAll(){if(!expenses.length){alert('沒有資料可清除。');return;}if(!confirm('確定清除所有 '+expenses.length+' 筆記錄？'))return;expenses=[];dbPutAll('expenses',[]);updateSummary();renderExpList();renderSync();}
+updateSummary();
+
+/* ══ WISH LIST ══ */
+var wishes=[],customCats=[],wishFilter='全部',editingWishId=null,selectedCat=null;
+var DEFAULT_CATS=['🥐 麵包','☕ 咖啡','🍜 拉麵','🍽️ 餐廳','🛍️ 逛街','🍰 甜點','🍶 酒類','📦 其他'];
+function allCats(){return DEFAULT_CATS.concat(customCats.filter(function(c){return DEFAULT_CATS.indexOf(c)===-1;}));}
+function catIcon(c){var m={'🥐 麵包':'🥐','☕ 咖啡':'☕','🍜 拉麵':'🍜','🍽️ 餐廳':'🍽️','🛍️ 逛街':'🛍️','🍰 甜點':'🍰','🍶 酒類':'🍶','📦 其他':'📦'};return m[c]||(c||'').slice(0,2)||'⭐';}
+function loadWishes(){dbGetAll('wishes').then(function(items){wishes=items.sort(function(a,b){return(b.addedAt||0)>(a.addedAt||0)?1:-1;});dbGetMeta('wish_cats').then(function(cats){customCats=cats||[];renderWishes();document.getElementById('wish-status').textContent=wishes.length?wishes.length+' 個地點已儲存':'點 ＋ 開始新增地點';});}).catch(function(){renderWishes();});}
+function saveWishes(){return dbPutAll('wishes',wishes).then(function(){return dbPutMeta('wish_cats',customCats);}).then(function(){document.getElementById('wish-status').textContent=wishes.length+' 個地點已儲存';});}
+function setWishFilter(cat){wishFilter=cat;renderWishes();}
+function rebuildFilterBar(){var usedCats=[];wishes.forEach(function(w){if(usedCats.indexOf(w.cat)===-1)usedCats.push(w.cat);});var cats=['全部'].concat(usedCats);var bar=document.getElementById('wish-filter-bar');bar.innerHTML='';cats.forEach(function(c){var btn=document.createElement('button');btn.className='wish-filter-btn'+(c===wishFilter?' active':'');btn.textContent=c;btn.onclick=function(){setWishFilter(c);};bar.appendChild(btn);});}
+function renderWishes(){rebuildFilterBar();var body=document.getElementById('wish-list-body');var filtered=wishFilter==='全部'?wishes:wishes.filter(function(w){return w.cat===wishFilter;});if(!filtered.length){body.innerHTML='<div class="wish-empty">這裡還是空的<br><span style="font-size:11px">點右上角 ＋ 開始新增！</span></div>';return;}var groups={},groupOrder=[];filtered.forEach(function(w){if(!groups[w.cat]){groups[w.cat]=[];groupOrder.push(w.cat);}groups[w.cat].push(w);});body.innerHTML='';groupOrder.forEach(function(cat){var hdr=document.createElement('div');hdr.className='wish-cat-header';hdr.textContent=cat;body.appendChild(hdr);groups[cat].forEach(function(w){body.appendChild(makeWishItem(w));});});}
+function makeWishItem(w){var item=document.createElement('div');item.className='wish-item';var icon=document.createElement('div');icon.className='wish-item-icon';icon.textContent=catIcon(w.cat);var main=document.createElement('div');main.className='wish-main';var nameRow=document.createElement('div');nameRow.className='wish-name';nameRow.textContent=w.name;if(w.visited){var vb=document.createElement('span');vb.className='visited-badge';vb.textContent='✓ 已去';nameRow.appendChild(vb);}main.appendChild(nameRow);if(w.addr){var ae=document.createElement('div');ae.className='wish-addr';ae.textContent='📍 '+w.addr;main.appendChild(ae);}if(w.note){var ne=document.createElement('div');ne.className='wish-note';ne.textContent='💬 '+w.note;main.appendChild(ne);}var acts=document.createElement('div');acts.className='wish-actions';if(w.map){var ma=document.createElement('a');ma.className='wish-map-btn';ma.href=w.map;ma.target='_blank';ma.textContent='📍 地圖';acts.appendChild(ma);}var vb2=document.createElement('button');vb2.className='wish-act-btn visit'+(w.visited?' done':'');vb2.textContent=w.visited?'✓ 已去過':'打卡';(function(id){vb2.onclick=function(){toggleWishVisited(id);};})(w.id);acts.appendChild(vb2);var eb=document.createElement('button');eb.className='wish-act-btn edit';eb.textContent='✏️ 編輯';(function(id){eb.onclick=function(){openWishModal(id);};})(w.id);acts.appendChild(eb);main.appendChild(acts);var del=document.createElement('button');del.className='wish-del-btn';del.textContent='✕';(function(id){del.onclick=function(){deleteWish(id);};})(w.id);item.appendChild(icon);item.appendChild(main);item.appendChild(del);return item;}
+function openWishModal(id){editingWishId=id;document.getElementById('wish-modal').classList.add('open');document.body.style.overflow='hidden';['wm-name','wm-addr','wm-note','wm-map','wm-new-cat'].forEach(function(i){document.getElementById(i).value='';});selectedCat=DEFAULT_CATS[0];if(id){var w=wishes.find(function(x){return x.id===id;});if(w){document.getElementById('wm-name').value=w.name;document.getElementById('wm-addr').value=w.addr||'';document.getElementById('wm-note').value=w.note||'';document.getElementById('wm-map').value=w.map||'';selectedCat=w.cat;}document.getElementById('wm-title').textContent='✏️ 編輯地點';}else{document.getElementById('wm-title').textContent='＋ 新增願望地點';}renderCatChips();}
+function closeWishModal(){document.getElementById('wish-modal').classList.remove('open');document.body.style.overflow='';}
+function renderCatChips(){var c=document.getElementById('wm-cat-chips');c.innerHTML='';allCats().forEach(function(cat){var btn=document.createElement('button');btn.className='cat-chip'+(cat===selectedCat?' active':'');btn.textContent=cat;btn.type='button';btn.onclick=function(){selectedCat=cat;renderCatChips();};c.appendChild(btn);});}
+function addCustomCat(){var v=document.getElementById('wm-new-cat').value.trim();if(!v)return;if(customCats.indexOf(v)===-1&&DEFAULT_CATS.indexOf(v)===-1)customCats.push(v);selectedCat=v;document.getElementById('wm-new-cat').value='';renderCatChips();}
+function saveWish(){var name=document.getElementById('wm-name').value.trim();if(!name){alert('請填入地點名稱');return;}var btn=document.getElementById('wm-save-btn');btn.textContent='儲存中...';btn.disabled=true;var item={id:editingWishId||Date.now(),name:name,cat:selectedCat||DEFAULT_CATS[0],addr:document.getElementById('wm-addr').value.trim(),note:document.getElementById('wm-note').value.trim(),map:document.getElementById('wm-map').value.trim(),visited:false,addedAt:new Date().toISOString()};if(editingWishId){var idx=wishes.findIndex(function(w){return w.id===editingWishId;});if(idx>-1){item.visited=wishes[idx].visited;wishes[idx]=item;}}else{wishes.unshift(item);}saveWishes().then(function(){renderWishes();closeWishModal();btn.textContent='儲存地點 →';btn.disabled=false;});}
+function deleteWish(id){if(!confirm('確定刪除這個地點？'))return;wishes=wishes.filter(function(w){return w.id!==id;});saveWishes().then(renderWishes);}
+function toggleWishVisited(id){var w=wishes.find(function(x){return x.id===id;});if(w){w.visited=!w.visited;saveWishes().then(renderWishes);}}
+function wishExportPrompt(){var code='WISHLIST2026:'+btoa(unescape(encodeURIComponent(JSON.stringify({items:wishes,cats:customCats}))));if(navigator.clipboard){navigator.clipboard.writeText(code).then(function(){alert('✅ 備份碼已複製！');}).catch(function(){prompt('請全選複製：',code);});}else{prompt('請全選複製：',code);}}
+function toggleWishImport(){var s=document.getElementById('wish-import-strip');s.style.display=s.style.display==='none'?'block':'none';}
+function wishImport(){var raw=document.getElementById('wish-import-text').value.trim();if(!raw.startsWith('WISHLIST2026:')){alert('格式不正確');return;}try{var d=JSON.parse(decodeURIComponent(escape(atob(raw.slice(13)))));if(!Array.isArray(d.items))throw new Error();var inIds={};d.items.forEach(function(w){inIds[w.id]=true;});var merged=wishes.filter(function(w){return!inIds[w.id];}).concat(d.items);merged.sort(function(a,b){return(b.addedAt||0)>(a.addedAt||0)?1:-1;});wishes=merged;customCats=Array.from(new Set((d.cats||[]).concat(customCats)));saveWishes().then(function(){renderWishes();document.getElementById('wish-import-strip').style.display='none';document.getElementById('wish-import-text').value='';alert('✅ 匯入成功！共 '+wishes.length+' 個地點。');});}catch(e){alert('備份碼解析失敗，請重新複製。');}}
+loadWishes();
+
+/* ══ GIST SYNC ══ */
+var gistToken='',gistId='';
+dbGetMeta('gist_token').then(function(t){if(t){gistToken=t;dbGetMeta('gist_id').then(function(id){if(id){gistId=id;updateGistUI();}});}});
+function updateGistUI(){var connected=!!(gistToken&&gistId);var badge=document.getElementById('gist-status-badge');var ts=document.getElementById('gist-token-section');var cs=document.getElementById('gist-connected-section');var idEl=document.getElementById('gist-id-display');if(!badge)return;badge.className='gist-status '+(connected?'connected':'disconnected');badge.textContent=connected?'🟢 已連線':'⚪ 未連線';if(ts)ts.style.display=connected?'none':'block';if(cs)cs.style.display=connected?'block':'none';if(idEl&&gistId)idEl.textContent=gistId;}
+function gistLog(msg){var el=document.getElementById('gist-log');if(el)el.textContent=msg;}
+function gistConnect(){var token=document.getElementById('gist-token-input').value.trim();if(!token){alert('請輸入 Token');return;}gistLog('🔍 驗證中...');fetch('https://api.github.com/gists',{headers:{'Authorization':'token '+token,'Accept':'application/vnd.github.v3+json'}}).then(function(r){if(!r.ok)throw new Error('Token無效('+r.status+')');return r.json();}).then(function(gists){var existing=gists.find(function(g){return g.description==='Okayama2026-TripData';});if(existing){gistToken=token;gistId=existing.id;dbPutMeta('gist_token',token);dbPutMeta('gist_id',gistId);updateGistUI();gistLog('✅ 找到既有資料，連線成功！');}else{return fetch('https://api.github.com/gists',{method:'POST',headers:{'Authorization':'token '+token,'Content-Type':'application/json'},body:JSON.stringify({description:'Okayama2026-TripData',public:false,files:{'data.json':{content:JSON.stringify({expenses:[],wishes:[],cats:[]})}}})}).then(function(r){return r.json();}).then(function(g){gistToken=token;gistId=g.id;dbPutMeta('gist_token',token);dbPutMeta('gist_id',gistId);updateGistUI();gistLog('✅ 已建立新空間，連線成功！');});}}).catch(function(e){gistLog('❌ 失敗：'+e.message);});}
+function gistPush(){if(!gistToken||!gistId)return;gistLog('📤 上傳中...');showSyncIndicator('上傳中...');var data={expenses:expenses,wishes:wishes,cats:customCats,updated:new Date().toISOString()};fetch('https://api.github.com/gists/'+gistId,{method:'PATCH',headers:{'Authorization':'token '+gistToken,'Content-Type':'application/json'},body:JSON.stringify({files:{'data.json':{content:JSON.stringify(data)}}})}).then(function(r){if(!r.ok)throw new Error(r.status);return r.json();}).then(function(){gistLog('✅ 上傳成功！'+new Date().toLocaleTimeString('zh-TW'));showSyncIndicator('✅ 上傳成功');}).catch(function(e){gistLog('❌ 失敗：'+e.message);});}
+function gistPull(){if(!gistToken||!gistId)return;gistLog('📥 下載中...');showSyncIndicator('下載中...');fetch('https://api.github.com/gists/'+gistId,{headers:{'Authorization':'token '+gistToken}}).then(function(r){return r.json();}).then(function(g){var content=JSON.parse(g.files['data.json'].content);if(content.expenses){expenses=content.expenses;dbPutAll('expenses',expenses);updateSummary();}if(content.wishes)wishes=content.wishes;if(content.cats)customCats=content.cats;saveWishes().then(renderWishes);gistLog('✅ 下載成功！');showSyncIndicator('✅ 下載完成');}).catch(function(e){gistLog('❌ 失敗：'+e.message);});}
+function gistDisconnect(){if(!confirm('確定斷開 Gist 連線？'))return;gistToken='';gistId='';dbPutMeta('gist_token','');dbPutMeta('gist_id','');updateGistUI();gistLog('已斷開連線');}
+function showSyncIndicator(msg){var el=document.getElementById('sync-indicator');if(!el)return;el.textContent=msg;el.classList.add('show');setTimeout(function(){el.classList.remove('show');},2200);}
+</script>
+</body>
+</html>
