@@ -6,7 +6,8 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
 <meta name="apple-mobile-web-app-title" content="岡山之旅">
-<meta name="theme-color" content="#f0f4f8">
+<meta name="theme-color" content="#2d9e6b">
+<link rel="manifest" href="./manifest.json">
 <title>岡山之旅 5/13–5/18</title>
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;600;700;900&display=swap" rel="stylesheet">
 <style>
@@ -1073,6 +1074,81 @@ function gistPull(){if(!gistToken||!gistId)return;gistLog('📥 下載中...');s
 function gistDisconnect(){if(!confirm('確定斷開 Gist 連線？'))return;gistToken='';gistId='';dbPutMeta('gist_token','');dbPutMeta('gist_id','');updateGistUI();gistLog('已斷開連線');}
 function toggleGistSection(){var el=document.getElementById('gist-advanced');if(el)el.style.display=el.style.display==='none'?'block':'none';}
 function showSyncIndicator(msg){var el=document.getElementById('sync-indicator');if(!el)return;el.textContent=msg;el.classList.add('show');setTimeout(function(){el.classList.remove('show');},2200);}
+
+/* ══ Service Worker 內嵌註冊（離線快取）══
+   用 Blob URL 內嵌，不需要外部 sw.js 檔案
+*/
+if('serviceWorker' in navigator){
+  var SW_CODE = `
+var CACHE_NAME = 'okayama2026-v1';
+self.addEventListener('install', function(e){
+  e.waitUntil(
+    caches.open(CACHE_NAME).then(function(cache){
+      return cache.add(self.location.origin + self.location.pathname.replace(/\\/[^\\/]*$/, '/') + 'index.html')
+        .catch(function(){})
+        .then(function(){
+          return cache.add(self.registration.scope).catch(function(){});
+        });
+    }).then(function(){ return self.skipWaiting(); })
+  );
+});
+self.addEventListener('activate', function(e){
+  e.waitUntil(
+    caches.keys().then(function(keys){
+      return Promise.all(keys.filter(function(k){return k!==CACHE_NAME;}).map(function(k){return caches.delete(k);}));
+    }).then(function(){ return self.clients.claim(); })
+  );
+});
+self.addEventListener('fetch', function(e){
+  var url = e.request.url;
+  /* 外部 API 請求直接走網路，失敗就讓頁面自己處理 */
+  if(url.includes('frankfurter.app')||url.includes('open.er-api.com')||url.includes('jsdelivr.net/npm/@fawazahmed0')||url.includes('api.github.com')||url.includes('fonts.googleapis.com')||url.includes('fonts.gstatic.com')){
+    e.respondWith(fetch(e.request).then(function(res){
+      var clone=res.clone();
+      caches.open(CACHE_NAME).then(function(c){c.put(e.request,clone);});
+      return res;
+    }).catch(function(){
+      return caches.match(e.request).then(function(c){return c||new Response('',{status:503});});
+    }));
+    return;
+  }
+  /* 主頁面：Cache First */
+  e.respondWith(
+    caches.match(e.request).then(function(cached){
+      if(cached) return cached;
+      return fetch(e.request).then(function(res){
+        if(res&&res.status===200){
+          var clone=res.clone();
+          caches.open(CACHE_NAME).then(function(c){c.put(e.request,clone);});
+        }
+        return res;
+      }).catch(function(){
+        return new Response('目前離線，請先連線一次讓網頁完成快取。',{headers:{'Content-Type':'text/plain;charset=utf-8'}});
+      });
+    })
+  );
+});
+`;
+  try {
+    var blob = new Blob([SW_CODE], {type:'application/javascript'});
+    var swUrl = URL.createObjectURL(blob);
+    navigator.serviceWorker.register(swUrl, {scope: './'})
+      .then(function(reg){
+        reg.addEventListener('updatefound', function(){
+          var nw=reg.installing;
+          nw.addEventListener('statechange', function(){
+            if(nw.state==='installed'&&navigator.serviceWorker.controller) showSyncIndicator('🔄 已更新快取');
+          });
+        });
+      })
+      .catch(function(err){ console.warn('SW Blob 註冊失敗，嘗試外部檔案...', err);
+        /* 備用：嘗試外部 sw.js（若部署在自己伺服器上） */
+        navigator.serviceWorker.register('./sw.js').catch(function(){});
+      });
+  } catch(e) {
+    console.warn('Service Worker 不支援:', e);
+  }
+}
 </script>
 </body>
 </html>
