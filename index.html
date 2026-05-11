@@ -290,9 +290,11 @@ body { font-family: var(--font); background: var(--bg); color: var(--text); min-
 .exp-header { background: linear-gradient(135deg, var(--teal) 0%, #38b57a 100%); padding: 18px 18px 14px; }
 .exp-header h2 { font-size: 16px; font-weight: 800; color: #fff; }
 .exp-header p { font-size: 11px; color: rgba(255,255,255,.65); margin-top: 2px; }
-.summary-strip { background: var(--card); display: flex; padding: 14px 0; border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); }
-.sum-col { flex: 1; text-align: center; border-right: 1px solid var(--border); }
-.sum-col:last-child { border-right: none; }
+.summary-strip { background: var(--card); display: flex; flex-wrap: wrap; padding: 14px 0; border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); }
+.sum-col { flex: 1; text-align: center; border-right: 1px solid var(--border); min-width: 80px; padding: 6px 0; }
+.sum-col:nth-child(3) { border-right: none; }
+.sum-col:nth-child(4) { border-right: 1px solid var(--border); border-top: 1px solid var(--border); }
+.sum-col:nth-child(5) { border-top: 1px solid var(--border); border-right: none; }
 .sum-label { font-size: 9.5px; color: var(--text-muted); letter-spacing: .5px; text-transform: uppercase; font-weight: 700; }
 .sum-val { font-size: 18px; font-weight: 800; color: var(--text); margin-top: 3px; }
 .sum-val.you { color: var(--teal); }
@@ -728,9 +730,11 @@ body { font-family: var(--font); background: var(--bg); color: var(--text); min-
   <div style="border-radius:var(--radius);overflow:hidden;box-shadow:var(--shadow);margin-bottom:12px;border:1.5px solid var(--border);">
     <div class="exp-header"><h2>💴 旅遊記帳本</h2><p>An ＆ 姊姊 · 岡山之旅 2026</p></div>
     <div class="summary-strip">
-      <div class="sum-col"><div class="sum-label">總花費</div><div class="sum-val" id="total-all">¥0</div></div>
-      <div class="sum-col"><div class="sum-label">An 負擔</div><div class="sum-val you" id="total-you">¥0</div></div>
-      <div class="sum-col"><div class="sum-label">姊姊 負擔</div><div class="sum-val sis" id="total-sis">¥0</div></div>
+      <div class="sum-col"><div class="sum-label">🇯🇵 日幣合計</div><div class="sum-val" id="total-all-jpy">¥0</div></div>
+      <div class="sum-col"><div class="sum-label">🇹🇼 台幣合計</div><div class="sum-val" id="total-all-twd" style="color:var(--amber-dark);">NT$0</div></div>
+      <div class="sum-col"><div class="sum-label" style="font-size:8.5px;">台幣換算(約¥)</div><div class="sum-val" id="total-all-twd-in-jpy" style="font-size:14px;color:var(--text-muted);">¥—</div></div>
+      <div class="sum-col"><div class="sum-label">An 負擔</div><div class="sum-val you" id="total-you">¥0</div><div id="total-you-twd" style="display:none;font-size:11px;color:var(--amber-dark);font-weight:700;"></div></div>
+      <div class="sum-col"><div class="sum-label">姊姊 負擔</div><div class="sum-val sis" id="total-sis">¥0</div><div id="total-sis-twd" style="display:none;font-size:11px;color:var(--amber-dark);font-weight:700;"></div></div>
     </div>
     <div class="exp-tabs-bar">
       <button class="exp-tab active" onclick="showExpTab('add')">＋ 新增</button>
@@ -741,8 +745,9 @@ body { font-family: var(--font); background: var(--bg); color: var(--text); min-
     <div class="exp-panel active" id="exp-add">
       <div class="exp-form">
         <div class="form-row"><label class="form-label">購買項目</label><input class="form-input" id="inp-name" type="text" placeholder="例：千光寺纜車票、拉麵兩份…"></div>
+        <div class="form-row"><label class="form-label">幣別</label><div class="toggle-group"><button class="toggle-btn teal-active" id="currency-jpy" onclick="setCurrency('jpy')">🇯🇵 日幣（¥）</button><button class="toggle-btn" id="currency-twd" onclick="setCurrency('twd')">🇹🇼 台幣（NT$）</button></div></div>
         <div class="form-row-2col">
-          <div class="form-row"><label class="form-label">金額（¥）</label><input class="form-input" id="inp-amount" type="number" placeholder="0" inputmode="numeric"></div>
+          <div class="form-row"><label class="form-label" id="amount-label">金額（¥）</label><input class="form-input" id="inp-amount" type="number" placeholder="0" inputmode="numeric"></div>
           <div class="form-row"><label class="form-label">日期</label><input class="form-input" id="inp-date" type="date"></div>
         </div>
         <div class="form-row"><label class="form-label">誰付款</label><div class="toggle-group"><button class="toggle-btn teal-active" id="payer-you" onclick="setPayer('you')">An 付</button><button class="toggle-btn" id="payer-sis" onclick="setPayer('sis')">姊姊 付</button></div></div>
@@ -754,17 +759,32 @@ body { font-family: var(--font); background: var(--bg); color: var(--text); min-
     <div class="exp-panel" id="exp-list"><div class="exp-list-wrap" id="exp-list-body"><div class="exp-empty">還沒有記帳記錄</div></div></div>
     <div class="exp-panel" id="exp-stats">
       <div style="background:var(--card);padding:16px;">
+        <div class="form-label" style="margin-bottom:10px;">幣別分布</div>
+        <div style="display:flex;gap:8px;margin-bottom:14px;">
+          <div class="stat-box teal" style="flex:1;padding:14px;text-align:center;border-radius:12px;">
+            <div style="font-size:16px;">🇯🇵</div>
+            <div style="font-size:10px;font-weight:700;color:var(--text-muted);margin-top:2px;">日幣</div>
+            <div style="font-size:17px;font-weight:900;color:var(--teal);margin-top:4px;" id="stat-jpy-total">¥0</div>
+            <div style="font-size:10px;color:var(--text-muted);margin-top:2px;" id="stat-jpy-count">0 筆</div>
+          </div>
+          <div style="flex:1;padding:14px;text-align:center;border-radius:12px;background:var(--amber-light);border:1px solid var(--amber-border);">
+            <div style="font-size:16px;">🇹🇼</div>
+            <div style="font-size:10px;font-weight:700;color:var(--text-muted);margin-top:2px;">台幣</div>
+            <div style="font-size:17px;font-weight:900;color:var(--amber-dark);margin-top:4px;" id="stat-twd-total">NT$0</div>
+            <div style="font-size:10px;color:var(--text-muted);margin-top:2px;" id="stat-twd-count">0 筆</div>
+          </div>
+        </div>
         <div class="form-label" style="margin-bottom:10px;">付款方式分布</div>
         <div class="stats-grid" style="margin-bottom:14px;">
-          <div class="stat-box teal" style="flex:1;"><div style="font-size:18px;">💴</div><div style="font-size:10px;font-weight:700;color:var(--text-muted);margin-top:3px;">現金</div><div style="font-size:15px;font-weight:800;color:var(--teal);margin-top:3px;" id="stat-cash">¥0</div></div>
-          <div class="stat-box teal" style="flex:1;"><div style="font-size:18px;">📱</div><div style="font-size:10px;font-weight:700;color:var(--text-muted);margin-top:3px;">PayPay</div><div style="font-size:15px;font-weight:800;color:var(--teal);margin-top:3px;" id="stat-paypay">¥0</div></div>
-          <div class="stat-box teal" style="flex:1;"><div style="font-size:18px;">💳</div><div style="font-size:10px;font-weight:700;color:var(--text-muted);margin-top:3px;">信用卡</div><div style="font-size:15px;font-weight:800;color:var(--teal);margin-top:3px;" id="stat-card">¥0</div></div>
+          <div class="stat-box teal" style="flex:1;"><div style="font-size:18px;">💴</div><div style="font-size:10px;font-weight:700;color:var(--text-muted);margin-top:3px;">現金</div><div style="font-size:13px;font-weight:800;color:var(--teal);margin-top:3px;" id="stat-cash">¥0</div></div>
+          <div class="stat-box teal" style="flex:1;"><div style="font-size:18px;">📱</div><div style="font-size:10px;font-weight:700;color:var(--text-muted);margin-top:3px;">PayPay</div><div style="font-size:13px;font-weight:800;color:var(--teal);margin-top:3px;" id="stat-paypay">¥0</div></div>
+          <div class="stat-box teal" style="flex:1;"><div style="font-size:18px;">💳</div><div style="font-size:10px;font-weight:700;color:var(--text-muted);margin-top:3px;">信用卡</div><div style="font-size:13px;font-weight:800;color:var(--teal);margin-top:3px;" id="stat-card">¥0</div></div>
         </div>
         <hr class="divider">
         <div class="form-label" style="margin-bottom:10px;">個人負擔詳情</div>
         <div style="display:flex;gap:8px;margin-bottom:14px;">
-          <div class="stat-box teal" style="flex:1;padding:14px;"><div style="font-size:12px;font-weight:800;color:var(--teal-dark);margin-bottom:6px;">An</div><div style="font-size:22px;font-weight:900;color:var(--teal);" id="stat-you-big">¥0</div><div style="font-size:11px;color:var(--text-muted);margin-top:6px;" id="stat-you-note">尚無記錄</div></div>
-          <div class="stat-box purple" style="flex:1;padding:14px;"><div style="font-size:12px;font-weight:800;color:var(--indigo);margin-bottom:6px;">姊姊</div><div style="font-size:22px;font-weight:900;color:var(--indigo);" id="stat-sis-big">¥0</div><div style="font-size:11px;color:var(--text-muted);margin-top:6px;" id="stat-sis-note">尚無記錄</div></div>
+          <div class="stat-box teal" style="flex:1;padding:14px;"><div style="font-size:12px;font-weight:800;color:var(--teal-dark);margin-bottom:6px;">An</div><div style="font-size:18px;font-weight:900;color:var(--teal);" id="stat-you-big">¥0</div><div style="font-size:13px;font-weight:800;color:var(--amber-dark);margin-top:3px;" id="stat-you-twd">NT$0</div><div style="font-size:11px;color:var(--text-muted);margin-top:4px;" id="stat-you-note">尚無記錄</div></div>
+          <div class="stat-box purple" style="flex:1;padding:14px;"><div style="font-size:12px;font-weight:800;color:var(--indigo);margin-bottom:6px;">姊姊</div><div style="font-size:18px;font-weight:900;color:var(--indigo);" id="stat-sis-big">¥0</div><div style="font-size:13px;font-weight:800;color:var(--amber-dark);margin-top:3px;" id="stat-sis-twd">NT$0</div><div style="font-size:11px;color:var(--text-muted);margin-top:4px;" id="stat-sis-note">尚無記錄</div></div>
         </div>
         <hr class="divider">
         <div class="form-label" style="margin-bottom:8px;">結算建議</div>
@@ -998,14 +1018,17 @@ function renderFxHistory(){
 }
 
 /* ══ EXPENSE ══ */
-var expenses=[],curPayer='you',curSplit='half',curMethod='cash';
+var expenses=[],curPayer='you',curSplit='half',curMethod='cash',curCurrency='jpy';
 dbGetAll('expenses').then(function(items){expenses=items.sort(function(a,b){return b.id-a.id;});updateSummary();});
 (function(){var d=document.getElementById('inp-date');var ts=new Date('2026-05-13'),te=new Date('2026-05-18');var t=new Date();var use=(t>=ts&&t<=te)?t:ts;d.value=use.toISOString().slice(0,10);})();
 function showExpTab(tab){['add','list','stats','sync'].forEach(function(n,i){document.querySelectorAll('.exp-tab')[i].classList.toggle('active',n===tab);});document.querySelectorAll('.exp-panel').forEach(function(p){p.classList.remove('active');});document.getElementById('exp-'+tab).classList.add('active');if(tab==='list')renderExpList();if(tab==='stats')renderStats();if(tab==='sync')renderSync();}
 function setPayer(p){curPayer=p;document.getElementById('payer-you').className='toggle-btn'+(p==='you'?' teal-active':'');document.getElementById('payer-sis').className='toggle-btn'+(p==='sis'?' amber-active':'');}
 function setSplit(s){curSplit=s;['half','you','sis'].forEach(function(v){var el=document.getElementById('split-'+v);if(el)el.className='toggle-btn'+(v===s?' teal-active':'');});}
 function setMethod(m){curMethod=m;['cash','paypay','card'].forEach(function(v){var el=document.getElementById('method-'+v);if(el)el.className='toggle-btn'+(v===m?' indigo-active':'');});}
-function fmt(n){return '¥'+Math.round(n).toLocaleString();}
+function setCurrency(c){curCurrency=c;document.getElementById('currency-jpy').className='toggle-btn'+(c==='jpy'?' teal-active':'');document.getElementById('currency-twd').className='toggle-btn'+(c==='twd'?' amber-active':'');var lbl=document.getElementById('amount-label');if(lbl)lbl.textContent=c==='jpy'?'金額（¥）':'金額（NT$）';}
+function fmtJpy(n){return '¥'+Math.round(n).toLocaleString();}
+function fmtTwd(n){return 'NT$'+Math.round(n).toLocaleString();}
+function fmt(n,currency){return currency==='twd'?fmtTwd(n):fmtJpy(n);}
 function calcShare(a,p,s){if(s==='half')return{you:a/2,sis:a/2};if(s==='you')return{you:a,sis:0};return{you:0,sis:a};}
 function addExpense(){
   var name=document.getElementById('inp-name').value.trim();
@@ -1014,7 +1037,7 @@ function addExpense(){
   if(!name){alert('請輸入購買項目');return;}
   if(!amount||amount<=0){alert('請輸入正確金額');return;}
   if(!date){alert('請選擇日期');return;}
-  var item={id:Date.now(),name:name,amount:amount,date:date,payer:curPayer,split:curSplit,method:curMethod};
+  var item={id:Date.now(),name:name,amount:amount,currency:curCurrency,date:date,payer:curPayer,split:curSplit,method:curMethod};
   expenses.unshift(item);
   dbPutAll('expenses',expenses).then(function(){dbPutMeta('exp_updated',new Date().toLocaleString('zh-TW'));});
   updateSummary();
@@ -1030,9 +1053,61 @@ var DAY_LABELS={'2026-05-13':'5/13（三）','2026-05-14':'5/14（四）','2026-
 var METHOD_LABELS={cash:'現金',paypay:'PayPay',card:'信用卡'};
 var SPLIT_LABELS={half:'均分',you:'An獨付',sis:'姊姊獨付'};
 var PAYER_LABELS={you:'An',sis:'姊姊'};
-function renderExpList(){var body=document.getElementById('exp-list-body');if(!expenses.length){body.innerHTML='<div class="exp-empty">還沒有記帳記錄</div>';return;}var html='',lastDate='';expenses.forEach(function(e){var s=calcShare(e.amount,e.payer,e.split);if(e.date!==lastDate){html+='<div class="date-group-header">'+(DAY_LABELS[e.date]||e.date)+'</div>';lastDate=e.date;}var dotC=e.split==='you'?'you':(e.split==='sis'?'sis':'both');var bdgC=e.method==='cash'?'cash':(e.method==='paypay'?'paypay':'card');html+='<div class="exp-item"><div class="exp-dot '+dotC+'"></div><div class="exp-main"><div class="exp-item-name">'+e.name+'<span class="exp-mbadge '+bdgC+'">'+METHOD_LABELS[e.method]+'</span></div><div class="exp-meta">由 '+PAYER_LABELS[e.payer]+' 付・'+SPLIT_LABELS[e.split]+'</div></div><div class="exp-right"><div class="exp-amount">'+fmt(e.amount)+'</div><div class="exp-split-detail">An '+fmt(s.you)+'<br>姊 '+fmt(s.sis)+'</div></div><button class="exp-del" onclick="deleteExp('+e.id+')">✕</button></div>';});body.innerHTML=html;}
-function updateSummary(){var all=0,you=0,sis=0;expenses.forEach(function(e){var s=calcShare(e.amount,e.payer,e.split);all+=e.amount;you+=s.you;sis+=s.sis;});document.getElementById('total-all').textContent=fmt(all);document.getElementById('total-you').textContent=fmt(you);document.getElementById('total-sis').textContent=fmt(sis);}
-function renderStats(){var all=0,you=0,sis=0,paidYou=0,paidSis=0,mt={cash:0,paypay:0,card:0};expenses.forEach(function(e){var s=calcShare(e.amount,e.payer,e.split);all+=e.amount;you+=s.you;sis+=s.sis;if(e.payer==='you')paidYou+=e.amount;else paidSis+=e.amount;mt[e.method]+=e.amount;});document.getElementById('stat-cash').textContent=fmt(mt.cash);document.getElementById('stat-paypay').textContent=fmt(mt.paypay);document.getElementById('stat-card').textContent=fmt(mt.card);document.getElementById('stat-you-big').textContent=fmt(you);document.getElementById('stat-sis-big').textContent=fmt(sis);var yp=all>0?Math.round(you/all*100):0,sp=all>0?Math.round(sis/all*100):0;document.getElementById('stat-you-note').textContent='佔總花費 '+yp+'%，付出 '+fmt(paidYou);document.getElementById('stat-sis-note').textContent='佔總花費 '+sp+'%，付出 '+fmt(paidSis);var diff=paidYou-you,msg='';if(!expenses.length)msg='還沒有記帳記錄，記帳後這裡會自動計算 😊';else if(Math.abs(diff)<1)msg='✅ 兩人花費完全平衡，不需要互相轉帳！';else if(diff>0)msg='📌 姊姊應還 An <strong>'+fmt(diff)+'</strong>';else msg='📌 An 應還姊姊 <strong>'+fmt(-diff)+'</strong>';document.getElementById('settle-msg').innerHTML=msg;}
+function renderExpList(){var body=document.getElementById('exp-list-body');if(!expenses.length){body.innerHTML='<div class="exp-empty">還沒有記帳記錄</div>';return;}var html='',lastDate='';expenses.forEach(function(e){var cur=e.currency||'jpy';var s=calcShare(e.amount,e.payer,e.split);if(e.date!==lastDate){html+='<div class="date-group-header">'+(DAY_LABELS[e.date]||e.date)+'</div>';lastDate=e.date;}var dotC=e.split==='you'?'you':(e.split==='sis'?'sis':'both');var bdgC=e.method==='cash'?'cash':(e.method==='paypay'?'paypay':'card');var curBadge=cur==='twd'?'<span style="display:inline-block;font-size:10px;padding:1px 7px;border-radius:20px;font-weight:700;margin-left:4px;background:var(--amber-light);color:var(--amber-dark);border:1px solid var(--amber-border);">🇹🇼 台幣</span>':'<span style="display:inline-block;font-size:10px;padding:1px 7px;border-radius:20px;font-weight:700;margin-left:4px;background:var(--teal-light);color:var(--teal-dark);border:1px solid rgba(13,148,136,.2);">🇯🇵 日幣</span>';html+='<div class="exp-item"><div class="exp-dot '+dotC+'"></div><div class="exp-main"><div class="exp-item-name">'+e.name+'<span class="exp-mbadge '+bdgC+'">'+METHOD_LABELS[e.method]+'</span>'+curBadge+'</div><div class="exp-meta">由 '+PAYER_LABELS[e.payer]+' 付・'+SPLIT_LABELS[e.split]+'</div></div><div class="exp-right"><div class="exp-amount">'+fmt(e.amount,cur)+'</div><div class="exp-split-detail">An '+fmt(s.you,cur)+'<br>姊 '+fmt(s.sis,cur)+'</div></div><button class="exp-del" onclick="deleteExp('+e.id+')">✕</button></div>';});body.innerHTML=html;}
+function updateSummary(){
+  var totJpy=0,totTwd=0,youJpy=0,youTwd=0,sisJpy=0,sisTwd=0;
+  expenses.forEach(function(e){var cur=e.currency||'jpy';var s=calcShare(e.amount,e.payer,e.split);if(cur==='twd'){totTwd+=e.amount;youTwd+=s.you;sisTwd+=s.sis;}else{totJpy+=e.amount;youJpy+=s.you;sisJpy+=s.sis;}});
+  var el=function(id){return document.getElementById(id);};
+  if(el('total-all-jpy'))el('total-all-jpy').textContent=fmtJpy(totJpy);
+  if(el('total-all-twd'))el('total-all-twd').textContent=fmtTwd(totTwd);
+  /* 顯示台幣換算日幣估計 */
+  var twdInJpy=fxLiveRate>0&&totTwd>0?Math.round(totTwd/fxLiveRate):null;
+  if(el('total-all-twd-in-jpy'))el('total-all-twd-in-jpy').textContent=twdInJpy!==null?'≈¥'+twdInJpy.toLocaleString():'¥—';
+  /* 個人負擔：分幣別顯示 */
+  if(el('total-you')){el('total-you').textContent=fmtJpy(youJpy);var ts=el('total-you-twd');if(ts){ts.style.display=youTwd>0?'block':'none';ts.textContent='+'+fmtTwd(youTwd);}}
+  if(el('total-sis')){el('total-sis').textContent=fmtJpy(sisJpy);var ts2=el('total-sis-twd');if(ts2){ts2.style.display=sisTwd>0?'block':'none';ts2.textContent='+'+fmtTwd(sisTwd);}}
+}
+function renderStats(){
+  var totJpy=0,totTwd=0,youJpy=0,youTwd=0,sisJpy=0,sisTwd=0,paidYouJpy=0,paidYouTwd=0,paidSisJpy=0,paidSisTwd=0,cntJpy=0,cntTwd=0;
+  var mt={cash:0,paypay:0,card:0}; /* 日幣 only，PayPay/現金多為日本用 */
+  var mtTwd={cash:0,paypay:0,card:0}; /* 台幣付款方式 */
+  expenses.forEach(function(e){var cur=e.currency||'jpy';var s=calcShare(e.amount,e.payer,e.split);if(cur==='twd'){totTwd+=e.amount;youTwd+=s.you;sisTwd+=s.sis;cntTwd++;if(e.payer==='you')paidYouTwd+=e.amount;else paidSisTwd+=e.amount;mtTwd[e.method]=(mtTwd[e.method]||0)+e.amount;}else{totJpy+=e.amount;youJpy+=s.you;sisJpy+=s.sis;cntJpy++;if(e.payer==='you')paidYouJpy+=e.amount;else paidSisJpy+=e.amount;mt[e.method]=(mt[e.method]||0)+e.amount;}});
+  var g=function(id){return document.getElementById(id);};
+  if(g('stat-jpy-total'))g('stat-jpy-total').textContent=fmtJpy(totJpy);
+  if(g('stat-jpy-count'))g('stat-jpy-count').textContent=cntJpy+' 筆';
+  if(g('stat-twd-total'))g('stat-twd-total').textContent=fmtTwd(totTwd);
+  if(g('stat-twd-count'))g('stat-twd-count').textContent=cntTwd+' 筆';
+  if(g('stat-cash'))g('stat-cash').textContent=fmtJpy(mt.cash);
+  if(g('stat-paypay'))g('stat-paypay').textContent=fmtJpy(mt.paypay);
+  if(g('stat-card'))g('stat-card').textContent=fmtJpy(mt.card);
+  if(g('stat-you-big'))g('stat-you-big').textContent=fmtJpy(youJpy);
+  if(g('stat-you-twd'))g('stat-you-twd').textContent=youTwd>0?'+'+fmtTwd(youTwd):'';
+  if(g('stat-sis-big'))g('stat-sis-big').textContent=fmtJpy(sisJpy);
+  if(g('stat-sis-twd'))g('stat-sis-twd').textContent=sisTwd>0?'+'+fmtTwd(sisTwd):'';
+  var allJpy=expenses.length>0;
+  if(g('stat-you-note'))g('stat-you-note').textContent=allJpy?'付出 '+fmtJpy(paidYouJpy)+(paidYouTwd>0?' +'+fmtTwd(paidYouTwd):''):'尚無記錄';
+  if(g('stat-sis-note'))g('stat-sis-note').textContent=allJpy?'付出 '+fmtJpy(paidSisJpy)+(paidSisTwd>0?' +'+fmtTwd(paidSisTwd):''):'尚無記錄';
+  /* 結算：日幣＋台幣都由 An 先墊付，最後統一跟姊姊收 */
+  var diffJpy=paidYouJpy-youJpy; /* 正值=姊姊欠An，負值=An欠姊姊 */
+  var diffTwd=paidYouTwd-youTwd;
+  var msg='';
+  if(!expenses.length){msg='還沒有記帳記錄，記帳後這裡會自動計算 😊';}
+  else{
+    var lines=[];
+    /* 日幣結算 */
+    if(Math.abs(diffJpy)<1)lines.push('✅ 日幣部分兩人平衡，不需要轉帳！');
+    else if(diffJpy>0)lines.push('🇯🇵 姊姊應還 An <strong>'+fmtJpy(diffJpy)+'</strong>');
+    else lines.push('🇯🇵 An 應還姊姊 <strong>'+fmtJpy(-diffJpy)+'</strong>');
+    /* 台幣結算 */
+    if(totTwd>0){
+      if(Math.abs(diffTwd)<1)lines.push('✅ 台幣部分兩人平衡，不需要轉帳！');
+      else if(diffTwd>0)lines.push('🇹🇼 姊姊應還 An <strong>'+fmtTwd(diffTwd)+'</strong>');
+      else lines.push('🇹🇼 An 應還姊姊 <strong>'+fmtTwd(-diffTwd)+'</strong>');
+    }
+    msg=lines.join('<br>');
+  }
+  if(g('settle-msg'))g('settle-msg').innerHTML=msg;
+}
 function renderSync(){document.getElementById('backup-count').textContent=expenses.length;dbGetMeta('exp_updated').then(function(t){document.getElementById('backup-time').textContent=t||'—';});}
 function exportBackup(){var code='OKAYAMA2026:'+btoa(unescape(encodeURIComponent(JSON.stringify(expenses))));document.getElementById('backup-output').style.display='block';document.getElementById('backup-text').value=code;}
 function showImportBox(){document.getElementById('import-box').style.display='block';}
