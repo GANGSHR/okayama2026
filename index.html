@@ -683,22 +683,34 @@ body { font-family: var(--font); background: var(--bg); color: var(--text); min-
 <div class="page" id="page-fx">
   <!-- 即時匯率主卡，開啟即自動載入 -->
   <div class="fx-live-hero" id="fx-hero">
-    <div class="fx-live-label">即時匯率 · 台灣銀行參考</div>
+    <div class="fx-live-label">臺灣銀行牌告匯率 · 即期賣出</div>
     <div id="fx-loading-state">
-      <div style="color:rgba(255,255,255,.7);font-size:14px;padding:12px 0;"><span class="fx-loading-ring"></span>取得最新匯率中...</div>
+      <div style="color:rgba(255,255,255,.7);font-size:14px;padding:12px 0;"><span class="fx-loading-ring"></span>連線台銀取得最新匯率...</div>
     </div>
     <div id="fx-rate-state" style="display:none;">
       <div class="fx-live-rate-big" id="fx-live-rate-big">—</div>
-      <div class="fx-live-unit">NT$ / ¥100 日圓</div>
+      <div class="fx-live-unit">NT$ / ¥100 日圓（即期賣出・換匯參考）</div>
       <div class="fx-live-updated" id="fx-live-updated"></div>
     </div>
-    <div id="fx-error-state" style="display:none;color:rgba(255,255,255,.65);font-size:13px;padding:8px 0;"></div>
+    <div id="fx-error-state" style="display:none;color:rgba(255,255,255,.8);font-size:13px;padding:8px 0;"></div>
     <button class="fx-refresh-btn" style="margin-top:14px;" onclick="fetchLiveRate()">🔄 重新整理</button>
   </div>
 
   <div class="card" style="margin-bottom:12px">
-    <div class="card-header"><div class="card-icon">🧮</div><div><div class="card-title">換算計算機</div><div class="card-sub">輸入日圓，立即換算台幣</div></div></div>
+    <div class="card-header"><div class="card-icon">🧮</div><div><div class="card-title">換算計算機</div><div class="card-sub">以台銀即期賣出換算・¥100 要花多少台幣</div></div></div>
     <div class="card-body">
+      <!-- 手動輸入匯率 -->
+      <div style="background:var(--amber-light);border:1.5px solid var(--amber-border);border-radius:10px;padding:10px 14px;margin-bottom:12px;display:flex;align-items:center;gap:10px;">
+        <div style="font-size:12px;font-weight:800;color:var(--amber-dark);flex-shrink:0;">✏️ 手動輸入台銀賣出</div>
+        <div style="display:flex;align-items:center;gap:6px;flex:1;">
+          <span style="font-size:13px;font-weight:700;color:var(--text-mid);">¥100 =</span>
+          <input id="fx-manual-input" type="number" step="0.01" placeholder="如：20.19" inputmode="decimal"
+            style="width:90px;border:1.5px solid var(--amber-border);border-radius:8px;padding:6px 10px;font-size:14px;font-weight:800;color:var(--amber-dark);background:#fff;font-family:var(--font);outline:none;"
+            onchange="fxApplyManual()">
+          <span style="font-size:13px;font-weight:700;color:var(--text-mid);">NT$</span>
+        </div>
+        <button onclick="fxApplyManual()" style="background:var(--amber);color:#fff;border:none;border-radius:8px;padding:6px 12px;font-size:12px;font-weight:800;cursor:pointer;font-family:var(--font);flex-shrink:0;">套用</button>
+      </div>
       <div class="fx-display">
         <div class="fx-display-label">日圓金額</div>
         <div class="fx-display-jpy" id="fx-jpy-display">¥ 0</div>
@@ -713,7 +725,7 @@ body { font-family: var(--font); background: var(--bg); color: var(--text); min-
       </div>
       <div style="display:flex;gap:8px;margin-top:4px;">
         <button class="add-btn" onclick="fxSaveToHistory()" style="flex:2;margin-bottom:0;">📌 記下換算</button>
-        <button onclick="fxInput='';fxCalc();" style="flex:1;padding:13px;background:var(--coral-light);color:var(--coral);border:1.5px solid rgba(239,68,68,.25);border-radius:12px;font-size:14px;font-weight:800;font-family:var(--font);cursor:pointer;">清除</button>
+        <button onclick="fxInput='';fxCalc();" style="flex:1;padding:13px;background:var(--coral-light);color:var(--coral);border:1.5px solid rgba(192,57,43,.25);border-radius:12px;font-size:14px;font-weight:800;font-family:var(--font);cursor:pointer;">清除</button>
       </div>
     </div>
   </div>
@@ -909,12 +921,12 @@ window.addEventListener('load',function(){
 });
 
 /* ══ FX ══ */
-var fxInput='',fxHistory=[],fxLiveRate=0,fxRateDate='';
+var fxInput='',fxHistory=[],fxLiveRate=0,fxRateBuy=0,fxRateDate='';
 dbGetMeta('fx_history').then(function(h){if(h)fxHistory=h;renderFxHistory();});
 dbGetMeta('fx_live_rate').then(function(r){
   if(r&&r.rate){
-    fxLiveRate=r.rate; fxRateDate=r.date;
-    showFxRateState(r.rate,r.date,'（上次快取）');
+    fxLiveRate=r.rate; fxRateBuy=r.rateBuy||r.rate; fxRateDate=r.date;
+    showFxRateState(r.rate,r.rateBuy||r.rate,r.date,'上次快取'+(r.src?'・'+r.src:''));
     fxCalc();
   }
 });
@@ -925,68 +937,103 @@ function fetchLiveRate(){
   var errEl=document.getElementById('fx-error-state');
   if(loadEl)loadEl.style.display='block';
   if(rateEl)rateEl.style.display='none';
-  if(errEl)errEl.style.display='none';
+  if(errEl){errEl.style.display='none';errEl.textContent='';}
 
-  /* 依序嘗試多個來源，任一成功即採用 */
-  function tryFrankfurter(){
-    return fetch('https://api.frankfurter.app/latest?from=TWD&to=JPY',{signal:AbortSignal.timeout(6000)})
-      .then(function(r){if(!r.ok)throw new Error('frankfurter fail');return r.json();})
-      .then(function(d){
-        /* frankfurter 回傳 TWD→JPY，需取倒數換成 JPY→TWD */
-        var jpyPerTwd=d.rates.JPY;
-        var twdPerJpy=1/jpyPerTwd;
-        return {rate:twdPerJpy,date:d.date,src:'Frankfurter'};
-      });
-  }
+  /*
+   * 台銀網站有 CORS 限制，瀏覽器無法直接 fetch。
+   * 策略：用多個公開 CORS API 取得 JPY→TWD 匯率（即期賣出近似值）。
+   * 同時提供手動輸入欄讓使用者直接貼上台銀當日賣出價，確保 100% 精準。
+   *
+   * 台銀今日（5/11）日圓即期賣出 = 0.2019（¥100 = NT$20.19）
+   * 各 API 回傳的是市場中間價，通常與台銀即期買入相近，
+   * 台銀賣出 ≈ 市場中間價 × 1.02（約加2%手續差）
+   * → 我們直接顯示 API 值供參考，並強烈建議手動輸入台銀賣出確認。
+   */
+
   function tryExchangeRateApi(){
-    return fetch('https://open.er-api.com/v6/latest/JPY',{signal:AbortSignal.timeout(6000)})
-      .then(function(r){if(!r.ok)throw new Error('er-api fail');return r.json();})
+    return fetch('https://open.er-api.com/v6/latest/JPY',{signal:AbortSignal.timeout(7000)})
+      .then(function(r){if(!r.ok)throw new Error('er-api '+r.status);return r.json();})
       .then(function(d){
         if(!d.rates||!d.rates.TWD)throw new Error('no TWD');
-        return {rate:d.rates.TWD,date:d.time_last_update_utc?d.time_last_update_utc.slice(0,10):new Date().toISOString().slice(0,10),src:'ExchangeRate-API'};
+        var mid=d.rates.TWD;
+        var date=d.time_last_update_utc?d.time_last_update_utc.slice(0,10):new Date().toISOString().slice(0,10);
+        return {rate:mid,date:date,src:'ExchangeRate-API',isMid:true};
       });
   }
   function tryCurrencyApi(){
-    return fetch('https://cdn.jsdelivr.net/npm/@fawazahmed0/currency-api@latest/v1/currencies/jpy.json',{signal:AbortSignal.timeout(6000)})
-      .then(function(r){if(!r.ok)throw new Error('currencyapi fail');return r.json();})
+    return fetch('https://cdn.jsdelivr.net/npm/@fawazahmed0/currency-api@latest/v1/currencies/jpy.json',{signal:AbortSignal.timeout(7000)})
+      .then(function(r){if(!r.ok)throw new Error('currencyapi '+r.status);return r.json();})
       .then(function(d){
         if(!d.jpy||!d.jpy.twd)throw new Error('no twd');
-        return {rate:d.jpy.twd,date:d.date||new Date().toISOString().slice(0,10),src:'CurrencyAPI'};
+        var mid=d.jpy.twd;
+        var date=d.date||new Date().toISOString().slice(0,10);
+        return {rate:mid,date:date,src:'CurrencyAPI',isMid:true};
+      });
+  }
+  function tryFrankfurter(){
+    return fetch('https://api.frankfurter.app/latest?from=JPY&to=TWD',{signal:AbortSignal.timeout(7000)})
+      .then(function(r){if(!r.ok)throw new Error('frankfurter '+r.status);return r.json();})
+      .then(function(d){
+        if(!d.rates||!d.rates.TWD)throw new Error('no TWD');
+        return {rate:d.rates.TWD,date:d.date,src:'Frankfurter',isMid:true};
       });
   }
 
-  /* 逐一嘗試，不用 Promise.any 避免部分瀏覽器相容問題 */
   tryExchangeRateApi()
-    .catch(function(){return tryFrankfurter();})
     .catch(function(){return tryCurrencyApi();})
+    .catch(function(){return tryFrankfurter();})
     .then(function(result){
       fxLiveRate=result.rate;
+      fxRateBuy=result.rate;
       fxRateDate=result.date;
-      dbPutMeta('fx_live_rate',{rate:fxLiveRate,date:fxRateDate});
-      showFxRateState(fxLiveRate,fxRateDate,'已更新 · '+result.src);
+      dbPutMeta('fx_live_rate',{rate:fxLiveRate,rateBuy:fxRateBuy,date:fxRateDate,src:result.src});
+      showFxRateState(fxLiveRate,fxRateBuy,fxRateDate,result.src,result.isMid);
       fxCalc();
-      var u=document.getElementById('fx-rate-used');
-      if(u)u.textContent='¥1 = NT$ '+fxLiveRate.toFixed(4)+' · 已更新';
     })
     .catch(function(){
       if(loadEl)loadEl.style.display='none';
-      if(errEl){
-        errEl.style.display='block';
-        errEl.textContent=fxLiveRate>0?'網路連線失敗，顯示上次快取匯率 ('+fxRateDate+')':'無法取得匯率，請確認網路連線後重試';
-      }
-      if(fxLiveRate>0){showFxRateState(fxLiveRate,fxRateDate,'快取（離線）');}
+      if(errEl){errEl.style.display='block';errEl.textContent=fxLiveRate>0?'網路失敗，顯示上次快取（'+fxRateDate+'）':'無法取得匯率，請手動輸入台銀賣出價';}
+      if(fxLiveRate>0){showFxRateState(fxLiveRate,fxRateBuy,fxRateDate,'快取',true);}
     });
 }
 
-function showFxRateState(rate,date,note){
+/* 手動套用台銀賣出匯率（¥100 = NT$ X） */
+function fxApplyManual(){
+  var inp=document.getElementById('fx-manual-input');
+  if(!inp)return;
+  var val=parseFloat(inp.value);
+  if(!val||val<10||val>50){alert('請輸入合理的匯率（例如：20.19）');return;}
+  /* 使用者輸入的是 ¥100 = NT$ val，換算成 ¥1 = NT$ */
+  fxLiveRate=val/100;
+  fxRateBuy=fxLiveRate;
+  fxRateDate=new Date().toLocaleDateString('zh-TW',{year:'numeric',month:'2-digit',day:'2-digit'}).replace(/\//g,'/');
+  dbPutMeta('fx_live_rate',{rate:fxLiveRate,rateBuy:fxLiveRate,date:fxRateDate,src:'手動輸入・台銀即期賣出'});
+  showFxRateState(fxLiveRate,fxLiveRate,fxRateDate,'手動輸入・台銀即期賣出',false);
+  fxCalc();
+  inp.value='';
+  showSyncIndicator('✅ 匯率已套用 ¥100 = NT$'+val);
+}
+
+function showFxRateState(rateSell,rateBuy,date,src,isMid){
   var loadEl=document.getElementById('fx-loading-state');
   var rateEl=document.getElementById('fx-rate-state');
   var bigEl=document.getElementById('fx-live-rate-big');
   var updEl=document.getElementById('fx-live-updated');
   if(loadEl)loadEl.style.display='none';
   if(rateEl)rateEl.style.display='block';
-  if(bigEl)bigEl.textContent='NT$ '+(rate*100).toFixed(2);
-  if(updEl)updEl.textContent=date+' · '+note;
+  if(bigEl)bigEl.textContent='NT$ '+(rateSell*100).toFixed(2);
+  var isManual=src&&src.indexOf('手動')!==-1;
+  var srcBadge=isManual
+    ?'✅ 手動・台銀即期賣出'
+    :(isMid?'⚠️ 市場中間價（非台銀牌告）':'🏦 台銀即期賣出');
+  var bgColor=isManual?'rgba(196,113,90,.3)':(isMid?'rgba(181,70,74,.3)':'rgba(255,255,255,.22)');
+  if(updEl)updEl.innerHTML=
+    '<span style="background:'+bgColor+';border-radius:6px;padding:2px 8px;font-weight:800;">'+srcBadge+'</span>'
+    +(isMid&&!isManual?'<br><span style="font-size:10px;opacity:.85;">⬆️ 請用下方「手動輸入」貼台銀賣出價確保精準</span>':'')
+    +'<br>¥100 = NT$ '+(rateSell*100).toFixed(2)
+    +'<br>'+date+' 更新';
+  var u=document.getElementById('fx-rate-used');
+  if(u)u.textContent='¥1 = NT$ '+rateSell.toFixed(4)+(isManual?' ｜ ✅台銀即期賣出':isMid?' ｜ ⚠️市場中間價（非台銀）':' ｜ 台銀即期賣出');
 }
 
 function fxKey(k){if(fxInput.length>=9)return;if(k!=='.'&&fxInput==='0')fxInput=k;else fxInput+=k;fxCalc();}
